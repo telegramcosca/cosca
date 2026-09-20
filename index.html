@@ -4,361 +4,313 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1f27b4">
-<title>Casca – Welcome</title>
+<title>Casca – Chat App</title>
 
-<!-- Fonts: Outfit (wordmark + tagline), Inter (button) -->
+<!-- Fonts from both Welcome & Login designs -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Inter:wght@500&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
   /* ==========================================================================
-     CASCA – Welcome / splash screen (Provided by User)
+     GLOBAL & ANIMATIONS
      ========================================================================== */
-  :root {
-    --white:        #ffffff;
-    --bg-left:      #1129b1;
-    --bg-mid:       #2b25ab;
-    --bg-right:     #421fce;
-    --bg-glow:      #7a3cfd;
-    --cta-from:     #00a4ff;
-    --cta-to:       #7f45fd;
-    --dot-active:   #01a3fb;
-    --dot-idle:     rgba(200, 185, 255, .5);
-    --sparkle:      rgba(196, 181, 255, .64);
-  }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%;
-    background: #0a0c26; 
-    -webkit-text-size-adjust: 100%;
-  }
-
+  html, body { height: 100%; background: #0a0c26; -webkit-text-size-adjust: 100%; }
   body {
-    display: flex;
-    justify-content: center;
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    display: flex; justify-content: center;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
 
-  .screen {
+  /* Smooth transition animations */
+  .fade-out { animation: fadeOut 0.4s ease forwards; pointer-events: none; }
+  .slide-in { animation: slideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; display: flex !important; }
+  
+  @keyframes fadeOut { 
+    from { opacity: 1; transform: scale(1); } 
+    to { opacity: 0; transform: scale(0.95); visibility: hidden; } 
+  }
+  @keyframes slideIn { 
+    from { opacity: 0; transform: translateY(30px); } 
+    to { opacity: 1; transform: translateY(0); } 
+  }
+
+  /* ==========================================================================
+     1. WELCOME SCREEN CSS (Original)
+     ========================================================================== */
+  #welcome-view {
     --u: calc(min(100vw, 50vh) / 887);
-    position: relative;
-    width: min(100vw, 50vh);
-    height: 100vh;
-    overflow: hidden;
-    isolation: isolate;
-    color: var(--white);
+    position: relative; width: min(100vw, 50vh); height: 100vh;
+    overflow: hidden; isolation: isolate; color: #ffffff;
   }
-  @supports (height: 100dvh) {
-    .screen {
-      --u: calc(min(100vw, 50dvh) / 887);
-      width: min(100vw, 50dvh);
-      height: 100dvh;
-    }
-  }
-
-  .bg {
-    position: absolute;
-    inset: 0;
-    z-index: -3;
-    background:
-      radial-gradient(circle at 100% 0, var(--bg-glow) 0, rgba(122, 60, 253, .45) calc(150 * var(--u)), rgba(100, 45, 245, .18) calc(380 * var(--u)), rgba(100, 45, 245, 0) calc(600 * var(--u))),
+  @supports (height: 100dvh) { #welcome-view { --u: calc(min(100vw, 50dvh) / 887); width: min(100vw, 50dvh); height: 100dvh; } }
+  
+  #welcome-view .bg {
+    position: absolute; inset: 0; z-index: -3;
+    background: radial-gradient(circle at 100% 0, #7a3cfd 0, rgba(122, 60, 253, .45) calc(150 * var(--u)), rgba(100, 45, 245, .18) calc(380 * var(--u)), rgba(100, 45, 245, 0) calc(600 * var(--u))),
       radial-gradient(ellipse calc(640 * var(--u)) calc(760 * var(--u)) at 60% 0, rgba(45, 45, 255, .38) 0, rgba(45, 45, 255, .20) 50%, rgba(45, 45, 255, 0) 100%),
       radial-gradient(ellipse calc(260 * var(--u)) calc(460 * var(--u)) at 100% 8%, rgba(110, 50, 250, .22) 0, rgba(110, 50, 250, 0) 100%),
       radial-gradient(ellipse calc(260 * var(--u)) calc(170 * var(--u)) at 50% 59%, rgba(120, 105, 200, .16) 0, rgba(120, 105, 200, 0) 100%),
       linear-gradient(to bottom, rgba(60, 25, 255, 0) 50%, rgba(60, 25, 255, .18) 65%, rgba(60, 25, 255, .30) 71%, rgba(60, 25, 255, .30) 79%, rgba(60, 25, 255, 0) 89%),
-      linear-gradient(to right, var(--bg-left) 0%, #1c28ab 17%, #2326a8 34%, var(--bg-mid) 50%, #3223b6 68%, #3d20c6 85%, var(--bg-right) 100%);
+      linear-gradient(to right, #1129b1 0%, #1c28ab 17%, #2326a8 34%, #2b25ab 50%, #3223b6 68%, #3d20c6 85%, #421fce 100%);
   }
-
-  .deco {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    overflow: visible;     
-    z-index: -2;
-  }
-  .deco--top-left     { top: 0;    left: 0;  width: calc(400 * var(--u)); }
-  .deco--bottom       { bottom: 0; left: 0;  width: 100%; }
-  .deco--sparkles     { top: calc(80 * var(--u)); right: 0; width: calc(187 * var(--u)); z-index: -1; }
-
-  .hero {
-    position: absolute;
-    top: 17.76%;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .logo {
-    display: block;
-    width: calc(333 * var(--u));
-    height: auto;
-  }
-
-  .brand {
-    margin-top: calc(5 * var(--u));
-    font-family: "Outfit", "Poppins", system-ui, sans-serif;
-    font-weight: 600;
-    font-size: calc(127 * var(--u));
-    line-height: 1;
-    letter-spacing: -0.005em;
-    color: var(--white);
-  }
-
-  .tagline {
-    margin-top: calc(33 * var(--u));
-    font-family: "Outfit", "Poppins", system-ui, sans-serif;
-    font-weight: 400;
-    font-size: calc(34 * var(--u));
-    line-height: calc(50 * var(--u));
-    color: rgba(255, 255, 255, .96);
-  }
-
-  .dots {
-    margin-top: calc(61 * var(--u));
-    display: flex;
-    gap: calc(16 * var(--u));
-    list-style: none;
-  }
-  .dots li {
-    width:  calc(17 * var(--u));
-    height: calc(17 * var(--u));
-    border-radius: 50%;
-    background: var(--dot-idle);
-  }
-  .dots li[aria-current="true"] {
-    background: var(--dot-active);
-  }
-
-  .cta {
-    position: absolute;
-    left: calc(64 * var(--u));
-    right: calc(64 * var(--u));
-    bottom: calc(173 * var(--u));
-    height: calc(132 * var(--u));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    border-radius: 999px;
-    background: linear-gradient(to right, var(--cta-from) 0%, #3a74fd 50%, var(--cta-to) 100%);
+  #welcome-view .deco { position: absolute; display: block; pointer-events: none; overflow: visible; z-index: -2; }
+  #welcome-view .deco--top-left { top: 0; left: 0; width: calc(400 * var(--u)); }
+  #welcome-view .deco--bottom { bottom: 0; left: 0; width: 100%; }
+  #welcome-view .deco--sparkles { top: calc(80 * var(--u)); right: 0; width: calc(187 * var(--u)); z-index: -1; }
+  #welcome-view .hero { position: absolute; top: 17.76%; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  #welcome-view .logo { display: block; width: calc(333 * var(--u)); height: auto; }
+  #welcome-view .brand { margin-top: calc(5 * var(--u)); font-family: "Outfit", sans-serif; font-weight: 600; font-size: calc(127 * var(--u)); line-height: 1; letter-spacing: -0.005em; color: #ffffff; }
+  #welcome-view .tagline { margin-top: calc(33 * var(--u)); font-family: "Outfit", sans-serif; font-weight: 400; font-size: calc(34 * var(--u)); line-height: calc(50 * var(--u)); color: rgba(255, 255, 255, .96); }
+  #welcome-view .dots { margin-top: calc(61 * var(--u)); display: flex; gap: calc(16 * var(--u)); list-style: none; }
+  #welcome-view .dots li { width: calc(17 * var(--u)); height: calc(17 * var(--u)); border-radius: 50%; background: rgba(200, 185, 255, .5); }
+  #welcome-view .dots li[aria-current="true"] { background: #01a3fb; }
+  #welcome-view .cta {
+    position: absolute; left: calc(64 * var(--u)); right: calc(64 * var(--u)); bottom: calc(173 * var(--u)); height: calc(132 * var(--u));
+    display: flex; align-items: center; justify-content: center; border: 0; border-radius: 999px;
+    background: linear-gradient(to right, #00a4ff 0%, #3a74fd 50%, #7f45fd 100%);
     box-shadow: 0 calc(10 * var(--u)) calc(34 * var(--u)) rgba(30, 90, 255, .18);
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
-    font-size: calc(35 * var(--u));
-    letter-spacing: 0;
-    color: var(--white);
-    text-shadow: 0 0 calc(14 * var(--u)) rgba(255, 255, 255, .38);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: calc(35 * var(--u)); color: #ffffff;
+    text-shadow: 0 0 calc(14 * var(--u)) rgba(255, 255, 255, .38); cursor: pointer; transition: transform .15s ease, filter .15s ease;
   }
-  .cta:hover        { filter: brightness(1.06); }
-  .cta:active       { transform: scale(.985); filter: brightness(.97); }
-  .cta:focus-visible{ outline: calc(4 * var(--u)) solid rgba(255, 255, 255, .85); outline-offset: calc(6 * var(--u)); }
+  #welcome-view .cta:active { transform: scale(.985); filter: brightness(.97); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .cta { transition: none; }
+  /* ==========================================================================
+     2. LOGIN SCREEN CSS (Scoped to #login-view to prevent clashes)
+     ========================================================================== */
+  #login-view {
+    --u: calc(100cqw / 1024);
+    container-type: inline-size;
+    position: relative; width: 100%; max-width: 480px; min-height: 100dvh; overflow: hidden; isolation: isolate;
+    background: radial-gradient(120% 60% at 0% 0%, rgba(40, 110, 255, 0.55) 0%, rgba(40, 110, 255, 0) 55%),
+                radial-gradient(90% 50% at 100% 100%, rgba(140, 70, 245, 0.55) 0%, rgba(140, 70, 245, 0) 60%),
+                linear-gradient(165deg, #2d4be6 0%, #2a24c6 38%, #3222d2 70%, #4a22de 100%);
+    color: #ffffff;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+  #login-view .login-wave { position: absolute; z-index: -1; pointer-events: none; }
+  #login-view .login-wave--top-left { top: 0; left: 0; width: calc(430 * var(--u)); height: calc(300 * var(--u)); }
+  #login-view .login-wave--bottom-right { bottom: 0; right: 0; width: calc(520 * var(--u)); height: calc(360 * var(--u)); }
+  #login-view .login-sparkle { position: absolute; z-index: 0; width: calc(46 * var(--u)); height: calc(46 * var(--u)); fill: #7e80f3; pointer-events: none; }
+  #login-view .login-sparkle--big { top: calc(106 * var(--u)); right: calc(86 * var(--u)); }
+  #login-view .login-sparkle--small { top: calc(168 * var(--u)); right: calc(148 * var(--u)); width: calc(44 * var(--u)); height: calc(44 * var(--u)); }
+  
+  #login-view .login-back {
+    position: absolute; z-index: 2; top: calc(38 * var(--u)); left: calc(38 * var(--u)); width: calc(72 * var(--u)); height: calc(72 * var(--u));
+    display: grid; place-items: center; background: none; border: 0; border-radius: 50%; color: #ffffff; cursor: pointer;
+  }
+  #login-view .login-back svg { width: calc(48 * var(--u)); height: calc(48 * var(--u)); }
+  #login-view .login-content { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: calc(250 * var(--u)) calc(75 * var(--u)) calc(300 * var(--u)); text-align: center; }
+  #login-view .login-logo { width: calc(228 * var(--u)); height: calc(312 * var(--u)); display: block; transform: translateX(calc(14 * var(--u))); }
+  #login-view .login-title { margin-top: calc(24 * var(--u)); font-size: calc(68 * var(--u)); line-height: 1.1; font-weight: 800; letter-spacing: -0.01em; color: #ffffff; }
+  #login-view .login-subtitle { margin-top: calc(18 * var(--u)); max-width: calc(640 * var(--u)); font-size: calc(35 * var(--u)); line-height: 1.29; font-weight: 400; color: #a9b6ff; }
+  
+  #login-view .login-actions { width: 100%; margin-top: calc(62 * var(--u)); display: flex; flex-direction: column; gap: calc(39 * var(--u)); }
+  #login-view .login-btn {
+    width: 100%; height: calc(128 * var(--u)); display: flex; align-items: center; gap: calc(57 * var(--u));
+    padding: 0 calc(40 * var(--u)) 0 calc(38 * var(--u)); border-radius: calc(38 * var(--u)); font-family: inherit;
+    font-size: calc(38 * var(--u)); font-weight: 700; text-align: left; cursor: pointer; transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  #login-view .login-btn:active { transform: scale(0.985); }
+  #login-view .login-btn__icon { flex: none; width: calc(80 * var(--u)); height: calc(80 * var(--u)); display: block; }
+  #login-view .login-btn__label { flex: 1; white-space: nowrap; }
+  #login-view .login-btn__arrow { flex: none; width: calc(46 * var(--u)); height: calc(46 * var(--u)); }
+  
+  #login-view .login-btn--google { border: 0; color: #1c1a7c; background: linear-gradient(180deg, #fbfcff 0%, #eef1ff 100%); box-shadow: 0 calc(12 * var(--u)) calc(32 * var(--u)) rgba(10, 8, 110, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.9); }
+  #login-view .login-btn--google .login-btn__arrow { color: #4b3fd8; }
+  
+  #login-view .login-btn--github { color: #ffffff; background: rgba(24, 22, 128, 0.55); border: calc(2 * var(--u)) solid rgba(120, 130, 255, 0.45); box-shadow: inset 0 0 calc(30 * var(--u)) rgba(80, 90, 255, 0.12); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  #login-view .login-btn--github .login-btn__arrow { color: #8d97ff; }
+  
+  #login-view .login-footer { position: absolute; z-index: 1; left: 0; right: 0; bottom: calc(120 * var(--u)); padding: 0 calc(75 * var(--u)); text-align: center; font-size: calc(25 * var(--u)); line-height: 1.52; color: #97a3f2; }
+  #login-view .login-footer a { color: #14d8f2; font-weight: 700; text-decoration: none; }
+  
+  @media (min-width: 520px) {
+    #login-view { min-height: min(100dvh - 48px, 900px); border-radius: 32px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); }
+    #login-view .login-content { min-height: min(100dvh - 48px, 900px); }
   }
 
   /* ==========================================================================
-     CASCA – Login & Chat Screens (Backend Integration)
+     3. CHAT SCREEN CSS
      ========================================================================== */
-  #login-screen { 
-    display: none; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    background: #f0f2f5; 
-    width: 100vw;
-    height: 100vh;
-  }
-  .google-btn { background: #4285F4; color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
-  
   #chat-container { 
-    display: none; 
-    flex-direction: column; 
-    overflow: hidden; 
-    background: #e5ddd5;
-    width: 100vw;
-    height: 100vh;
+    display: none; flex-direction: column; overflow: hidden; background: #e5ddd5; width: 100vw; height: 100vh;
   }
   #header { background: #128C7E; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: bold; }
   #logout-btn { background: #d32f2f; color: white; text-decoration: none; padding: 5px 12px; border-radius: 15px; font-size: 14px; }
-  
   #chat-box { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
-  .message { background: white; padding: 8px 12px; border-radius: 10px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 15px; position: relative; font-family: Arial, sans-serif; color: black; }
+  .message { background: white; padding: 8px 12px; border-radius: 10px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 15px; color: black; }
   .my-message { background: #dcf8c6; align-self: flex-end; }
   .sender-name { font-size: 11px; font-weight: bold; color: #075E54; margin-bottom: 4px; }
-  
   #input-area { display: flex; padding: 10px; background: #f0f0f0; }
-  #msg-input { flex: 1; padding: 12px; border: none; border-radius: 20px; outline: none; font-size: 16px; font-family: Arial, sans-serif; }
+  #msg-input { flex: 1; padding: 12px; border: none; border-radius: 20px; outline: none; font-size: 16px; }
   #send-btn { background: #128C7E; color: white; border: none; padding: 10px 20px; margin-left: 10px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 </style>
 </head>
 
 <body>
-<!-- ===== 1. WELCOME SCREEN (Provided Code) ===== -->
-<main class="screen" id="welcome-screen">
-  <div class="bg" aria-hidden="true"></div>
 
-  <svg class="deco deco--top-left" viewBox="0 0 400 260" aria-hidden="true">
-    <defs>
-      <radialGradient id="gBack" gradientUnits="userSpaceOnUse" cx="-61.4" cy="-379.2" r="575">
-        <stop offset="0"    stop-color="#3a2fe0"/>
-        <stop offset="0.80" stop-color="#3a2ee2"/>
-        <stop offset="0.91" stop-color="#3c2be6"/>
-        <stop offset="0.96" stop-color="#4329e8"/>
-        <stop offset="0.985" stop-color="#4c2bec"/>
-        <stop offset="1"    stop-color="#5a30f2"/>
-      </radialGradient>
-      <radialGradient id="gFront" gradientUnits="userSpaceOnUse" cx="-398.9" cy="-436.4" r="787.2">
-        <stop offset="0"    stop-color="#2b2fd9"/>
-        <stop offset="0.76" stop-color="#2a31db"/>
-        <stop offset="0.87" stop-color="#2636e1"/>
-        <stop offset="0.91" stop-color="#2a3de6"/>
-        <stop offset="0.95" stop-color="#2c4ef4"/>
-        <stop offset="0.975" stop-color="#3565fb"/>
-        <stop offset="0.99" stop-color="#3f7cfe"/>
-        <stop offset="1"    stop-color="#4b8fff"/>
-      </radialGradient>
-    </defs>
-    <circle cx="-61.4" cy="-379.2" r="575" fill="url(#gBack)"/>
-    <circle cx="-61.4" cy="-379.2" r="574.2" fill="none" stroke="rgba(150,110,255,.35)" stroke-width="1.6"/>
-    <circle cx="-398.9" cy="-436.4" r="787.2" fill="url(#gFront)"/>
-    <circle cx="-398.9" cy="-436.4" r="786.4" fill="none" stroke="rgba(150,215,255,.38)" stroke-width="1.6"/>
-    <circle cx="-61.4" cy="-379.2" r="574.2" fill="none" stroke="rgba(140,175,255,.22)" stroke-width="1.6"/>
-  </svg>
-
-  <svg class="deco deco--sparkles" viewBox="700 80 187 140" aria-hidden="true">
-    <path fill="var(--sparkle)" d="M794 104 Q798.2 120.8 815 125 Q798.2 129.2 794 146 Q789.8 129.2 773 125 Q789.8 120.8 794 104 Z"/>
-    <path fill="var(--sparkle)" d="M750.5 164 Q753.4 175.6 765 178.5 Q753.4 181.4 750.5 193 Q747.6 181.4 736 178.5 Q747.6 175.6 750.5 164 Z"/>
-  </svg>
-
-  <svg class="deco deco--bottom" viewBox="0 1150 887 624" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <defs>
-      <radialGradient id="gPurple" gradientUnits="userSpaceOnUse" cx="1435.8" cy="1928.3" r="932.8">
-        <stop offset="0"    stop-color="#431dd0"/>
-        <stop offset="0.70" stop-color="#3e1ccd"/>
-        <stop offset="0.77" stop-color="#411ed1"/>
-        <stop offset="0.80" stop-color="#4420d6"/>
-        <stop offset="0.837" stop-color="#4d2ae8"/>
-        <stop offset="0.88" stop-color="#5a28ea"/>
-        <stop offset="0.917" stop-color="#5f2ced"/>
-        <stop offset="0.954" stop-color="#6a30f5"/>
-        <stop offset="0.99" stop-color="#7b38fd"/>
-        <stop offset="1"    stop-color="#8442ff"/>
-      </radialGradient>
-      <linearGradient id="gSwooshFill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="887" y2="0">
-        <stop offset="0"    stop-color="#2a3cff" stop-opacity="0"/>
-        <stop offset="0.17" stop-color="#2a3cff" stop-opacity=".14"/>
-        <stop offset="0.34" stop-color="#2c34ff" stop-opacity=".30"/>
-        <stop offset="0.56" stop-color="#3430ff" stop-opacity=".30"/>
-        <stop offset="0.80" stop-color="#4438ff" stop-opacity=".18"/>
-        <stop offset="1"    stop-color="#5040ff" stop-opacity=".10"/>
-      </linearGradient>
-      <linearGradient id="gSwooshRim" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="887" y2="0">
-        <stop offset="0"   stop-color="#2440f0"/>
-        <stop offset="0.5" stop-color="#3a62fb"/>
-        <stop offset="1"   stop-color="#6c70ff"/>
-      </linearGradient>
-      <linearGradient id="gPurpleFade" gradientUnits="userSpaceOnUse" x1="887" y1="1150" x2="520" y2="1700">
-        <stop offset="0"   stop-color="#fff"/>
-        <stop offset="0.2" stop-color="#fff" stop-opacity=".85"/>
-        <stop offset="0.4" stop-color="#fff" stop-opacity=".5"/>
-        <stop offset="0.6" stop-color="#fff" stop-opacity=".2"/>
-        <stop offset="0.8" stop-color="#fff" stop-opacity="0"/>
-      </linearGradient>
-      <mask id="mPurple" maskUnits="userSpaceOnUse" x="-100" y="950" width="1100" height="900">
-        <rect x="-100" y="950" width="1100" height="900" fill="url(#gPurpleFade)"/>
-      </mask>
-      <filter id="fGlow" x="-10%" y="-10%" width="120%" height="120%">
-        <feGaussianBlur stdDeviation="26"/>
-      </filter>
-      <filter id="fBlur" x="-10%" y="-30%" width="120%" height="160%">
-        <feGaussianBlur stdDeviation="13"/>
-      </filter>
-      <clipPath id="cSwoosh">
-        <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1 L-20 1800 L920 1800 Z"/>
-      </clipPath>
-    </defs>
-    <g mask="url(#mPurple)">
-      <circle cx="1435.8" cy="1928.3" r="932.8" fill="none" stroke="#7038fa" stroke-width="70" stroke-opacity=".6" filter="url(#fGlow)"/>
-      <circle cx="1435.8" cy="1928.3" r="932.8" fill="url(#gPurple)"/>
-      <circle cx="1435.8" cy="1928.3" r="932" fill="none" stroke="rgba(200,160,255,.28)" stroke-width="1.6"/>
-    </g>
-    <g clip-path="url(#cSwoosh)">
-      <rect x="-20" y="1290" width="940" height="510" fill="url(#gSwooshFill)"/>
-      <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1" fill="none" stroke="url(#gSwooshRim)" stroke-width="46" stroke-opacity=".75" filter="url(#fBlur)"/>
-      <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1" fill="none" stroke="rgba(170,190,255,.42)" stroke-width="2"/>
-    </g>
-  </svg>
-
-  <section class="hero">
-    <svg class="logo" viewBox="277 315 333 438" role="img" aria-label="Casca kite logo">
-      <path fill="#fff" fill-rule="evenodd" d="M425,609 L427.6,603.9 C437.4,692.1 541.3,674.1 570.9,749.1 C571.3,740.8 570.5,731.9 567.6,723.9 C550.8,651.2 455.2,672.5 433.6,601.6 C434.4,598.1 437.9,594.3 440.1,591.6 C444.1,596.9 446.7,603.3 451.9,608.4 C490.1,656.2 556.8,618.5 593.6,671.4 L589.9,650.6 L604.4,643.6 C599.3,639.4 594.3,635 588.9,631.6 C545.2,597.3 480.6,639.3 443.1,587.1 L546,450 L425,318 L303,451 Z M426,332 L497,416 L426,431 Z M496,419 L497,421 L426,598 L425,443 L336,472 L309,452 L426,431 L426,441 Z"/>
+  <!-- ==================== 1. WELCOME SCREEN ==================== -->
+  <main class="screen" id="welcome-view">
+    <div class="bg" aria-hidden="true"></div>
+    <svg class="deco deco--top-left" viewBox="0 0 400 260" aria-hidden="true">
+      <defs>
+        <radialGradient id="gBack" cx="-61.4" cy="-379.2" r="575"><stop offset="0" stop-color="#3a2fe0"/><stop offset="1" stop-color="#5a30f2"/></radialGradient>
+        <radialGradient id="gFront" cx="-398.9" cy="-436.4" r="787.2"><stop offset="0" stop-color="#2b2fd9"/><stop offset="1" stop-color="#4b8fff"/></radialGradient>
+      </defs>
+      <circle cx="-61.4" cy="-379.2" r="575" fill="url(#gBack)"/><circle cx="-61.4" cy="-379.2" r="574.2" fill="none" stroke="rgba(150,110,255,.35)" stroke-width="1.6"/>
+      <circle cx="-398.9" cy="-436.4" r="787.2" fill="url(#gFront)"/><circle cx="-398.9" cy="-436.4" r="786.4" fill="none" stroke="rgba(150,215,255,.38)" stroke-width="1.6"/>
     </svg>
-    <h1 class="brand">Casca</h1>
-    <p class="tagline">The world’s fastest messaging app.<br>It is free and secure.</p>
-    <ol class="dots" aria-label="Onboarding progress, page 1 of 6">
-      <li aria-current="true"></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ol>
-  </section>
+    <svg class="deco deco--sparkles" viewBox="700 80 187 140" aria-hidden="true">
+      <path fill="rgba(196, 181, 255, .64)" d="M794 104 Q798.2 120.8 815 125 Q798.2 129.2 794 146 Q789.8 129.2 773 125 Q789.8 120.8 794 104 Z"/>
+      <path fill="rgba(196, 181, 255, .64)" d="M750.5 164 Q753.4 175.6 765 178.5 Q753.4 181.4 750.5 193 Q747.6 181.4 736 178.5 Q747.6 175.6 750.5 164 Z"/>
+    </svg>
+    <svg class="deco deco--bottom" viewBox="0 1150 887 624" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="gPurple" cx="1435.8" cy="1928.3" r="932.8"><stop offset="0" stop-color="#431dd0"/><stop offset="1" stop-color="#8442ff"/></radialGradient>
+        <linearGradient id="gSwooshFill" x1="0" y1="0" x2="887" y2="0"><stop offset="0" stop-color="#2a3cff" stop-opacity="0"/><stop offset="1" stop-color="#5040ff" stop-opacity=".10"/></linearGradient>
+        <linearGradient id="gSwooshRim" x1="0" y1="0" x2="887" y2="0"><stop offset="0" stop-color="#2440f0"/><stop offset="1" stop-color="#6c70ff"/></linearGradient>
+        <clipPath id="cSwoosh"><path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1 L-20 1800 L920 1800 Z"/></clipPath>
+      </defs>
+      <g>
+        <circle cx="1435.8" cy="1928.3" r="932.8" fill="url(#gPurple)"/>
+      </g>
+      <g clip-path="url(#cSwoosh)">
+        <rect x="-20" y="1290" width="940" height="510" fill="url(#gSwooshFill)"/>
+        <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1" fill="none" stroke="url(#gSwooshRim)" stroke-width="46" stroke-opacity=".75" />
+      </g>
+    </svg>
+    <section class="hero">
+      <svg class="logo" viewBox="277 315 333 438">
+        <path fill="#fff" fill-rule="evenodd" d="M425,609 L427.6,603.9 C437.4,692.1 541.3,674.1 570.9,749.1 C571.3,740.8 570.5,731.9 567.6,723.9 C550.8,651.2 455.2,672.5 433.6,601.6 C434.4,598.1 437.9,594.3 440.1,591.6 C444.1,596.9 446.7,603.3 451.9,608.4 C490.1,656.2 556.8,618.5 593.6,671.4 L589.9,650.6 L604.4,643.6 C599.3,639.4 594.3,635 588.9,631.6 C545.2,597.3 480.6,639.3 443.1,587.1 L546,450 L425,318 L303,451 Z M426,332 L497,416 L426,431 Z M496,419 L497,421 L426,598 L425,443 L336,472 L309,452 L426,431 L426,441 Z"/>
+      </svg>
+      <h1 class="brand">Casca</h1>
+      <p class="tagline">The world’s fastest messaging app.<br>It is free and secure.</p>
+      <ol class="dots">
+        <li aria-current="true"></li><li></li><li></li><li></li><li></li><li></li>
+      </ol>
+    </section>
+    <button class="cta" type="button" id="startBtn">Start Messaging</button>
+  </main>
 
-  <button class="cta" type="button" id="startBtn">Start Messaging</button>
-</main>
 
-<!-- ===== 2. LOGIN SCREEN ===== -->
-<div id="login-screen">
-  <h1 style="color: #128C7E; margin-bottom: 10px;">Login</h1>
-  <p style="color: #666; margin-bottom: 30px;">Choose a login method</p>
-  <a href="/auth/google" class="google-btn">G Continue with Google</a>
-</div>
+  <!-- ==================== 2. NEW LOGIN SCREEN ==================== -->
+  <main id="login-view" style="display: none;">
+    <svg class="login-wave login-wave--top-left" viewBox="0 0 430 300" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="wTL1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a3cff" stop-opacity="0.85" /><stop offset="1" stop-color="#18a2ff" /></linearGradient>
+        <linearGradient id="wTL2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3af2" /><stop offset="1" stop-color="#2b4cf0" /></linearGradient>
+      </defs>
+      <path d="M0 0 H425 C372 84 262 168 120 232 C78 251 38 274 0 296 Z" fill="url(#wTL1)" />
+      <path d="M0 0 H322 C262 78 170 140 74 190 C46 204 20 222 0 244 Z" fill="url(#wTL2)" opacity="0.95" />
+    </svg>
+    <svg class="login-wave login-wave--bottom-right" viewBox="0 0 520 360" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="wBR1" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b45cf5" /><stop offset="1" stop-color="#4d2ce0" /></linearGradient>
+        <linearGradient id="wBR2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4327d8" /><stop offset="1" stop-color="#3122cc" /></linearGradient>
+      </defs>
+      <path d="M520 0 C446 74 340 176 214 254 C140 300 70 330 8 360 H520 Z" fill="url(#wBR1)" opacity="0.9" />
+      <path d="M520 140 C430 150 316 214 212 360 H520 Z" fill="url(#wBR2)" opacity="0.9" />
+    </svg>
+    <svg class="login-sparkle login-sparkle--big" viewBox="-1 -1 2 2"><path d="M0 -1 C0.1 -0.42 0.42 -0.1 1 0 C0.42 0.1 0.1 0.42 0 1 C-0.1 0.42 -0.42 0.1 -1 0 C-0.42 -0.1 -0.1 -0.42 0 -1 Z" /></svg>
+    <svg class="login-sparkle login-sparkle--small" viewBox="-1 -1 2 2"><path d="M0 -1 C0.1 -0.42 0.42 -0.1 1 0 C0.42 0.1 0.1 0.42 0 1 C-0.1 0.42 -0.42 0.1 -1 0 C-0.42 -0.1 -0.1 -0.42 0 -1 Z" /></svg>
+    
+    <!-- Animated Back Button -->
+    <button class="login-back" type="button" id="backBtn">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M43 24H6" /><path d="M21 9 6 24l15 15" /></svg>
+    </button>
+    
+    <section class="login-content">
+      <svg class="login-logo" viewBox="55 42 685 936">
+        <path fill="#fff" fill-rule="evenodd" d="M322 47 L592 335 L325 665 L60 338 Z M327 84 L484 262 L327 293 Z M82 340 L322 293 L322 316 L122 376 Z M327 316 L481 271 L326 650 Z" />
+        <path fill="#fff" d="M352 624 C380 672 430 692 520 690 C600 688 660 700 732 752 L692 762 L705 806 C660 755 620 728 560 724 C470 718 400 704 344 646 Z" />
+        <path fill="#fff" d="M328 640 L328 662 C332 720 370 770 440 800 C510 830 560 850 600 915 C620 945 634 962 642 972 C640 900 610 840 540 806 C470 775 410 745 372 700 C354 682 344 662 338 640 Z" />
+      </svg>
+      <h1 class="login-title">Welcome to Casca</h1>
+      <p class="login-subtitle">Choose how you want to log in to your Casca account.</p>
+      
+      <div class="login-actions">
+        <!-- Google Login Action Wired Up -->
+        <button class="login-btn login-btn--google" type="button" id="googleLoginBtn">
+          <svg class="login-btn__icon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" /><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" /><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" /><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" /></svg>
+          <span class="login-btn__label">Continue with Google</span>
+          <svg class="login-btn__arrow" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 24h38" /><path d="M28 9l15 15-15 15" /></svg>
+        </button>
 
-<!-- ===== 3. CHAT SCREEN ===== -->
-<div id="chat-container">
-  <div id="header">
-      <span id="status-text">Casca</span>
-      <a href="/logout" id="logout-btn">Logout</a>
+        <button class="login-btn login-btn--github" type="button" onclick="alert('GitHub Login coming soon!')">
+          <svg class="login-btn__icon" viewBox="0 0 16 16" fill="#ffffff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" /></svg>
+          <span class="login-btn__label">Continue with GitHub</span>
+          <svg class="login-btn__arrow" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 24h38" /><path d="M28 9l15 15-15 15" /></svg>
+        </button>
+      </div>
+    </section>
+    <p class="login-footer">By continuing, you agree to the<br /><a href="#">Terms of Service</a> <span class="and">and</span> <a href="#">Privacy Policy</a>.</p>
+  </main>
+
+
+  <!-- ==================== 3. CHAT SCREEN ==================== -->
+  <div id="chat-container">
+    <div id="header">
+        <span id="status-text">Casca</span>
+        <a href="/logout" id="logout-btn">Logout</a>
+    </div>
+    <div id="chat-box"></div>
+    <div id="input-area">
+        <input type="text" id="msg-input" placeholder="Type a message...">
+        <button id="send-btn">Send</button>
+    </div>
   </div>
-  <div id="chat-box"></div>
-  <div id="input-area">
-      <input type="text" id="msg-input" placeholder="Type a message...">
-      <button id="send-btn">Send</button>
-  </div>
-</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
   let currentUser = null;
+  const welcomeView = document.getElementById('welcome-view');
+  const loginView = document.getElementById('login-view');
+  const chatContainer = document.getElementById('chat-container');
 
-  // Jab user aapka banaya hua button dabayega[span_5](start_span)[span_5](end_span)
+  // 1. ANIMATION: Welcome to Login Screen
   document.getElementById('startBtn').addEventListener('click', function () {
-    document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
+    welcomeView.classList.add('fade-out'); // Start fade out
+    setTimeout(() => {
+        welcomeView.style.display = 'none';
+        welcomeView.classList.remove('fade-out');
+        
+        loginView.classList.add('slide-in'); // Start slide in
+    }, 400); // 400ms match with CSS animation
   });
 
+  // 2. ANIMATION: Back Button (Login to Welcome)
+  document.getElementById('backBtn').addEventListener('click', function() {
+    loginView.classList.remove('slide-in');
+    loginView.classList.add('fade-out');
+    
+    setTimeout(() => {
+        loginView.style.display = 'none';
+        loginView.classList.remove('fade-out');
+        
+        welcomeView.style.display = 'block';
+        welcomeView.classList.add('slide-in');
+        setTimeout(() => { welcomeView.classList.remove('slide-in'); }, 500);
+    }, 400);
+  });
+
+  // 3. GOOGLE LOGIN ROUTING
+  document.getElementById('googleLoginBtn').addEventListener('click', function() {
+      window.location.href = '/auth/google'; // Redirect to our backend auth route
+  });
+
+  // 4. CHECK USER LOGIN STATUS FOR CHAT
   fetch('/api/current_user')
       .then(res => res.text())
       .then(text => {
           if (text) {
               try {
                   currentUser = JSON.parse(text);
-                  document.getElementById('welcome-screen').style.display = 'none';
-                  document.getElementById('login-screen').style.display = 'none';
-                  document.getElementById('chat-container').style.display = 'flex';
+                  // Hide both auth screens, show chat immediately
+                  welcomeView.style.display = 'none';
+                  loginView.style.display = 'none';
+                  chatContainer.style.display = 'flex';
                   startChatSystem();
               } catch(e) {}
           }
@@ -371,13 +323,8 @@
       const msgInput = document.getElementById('msg-input');
       const chatBox = document.getElementById('chat-box');
 
-      socket.on('connect', () => {
-          headerText.innerText = `Casca (${currentUser.displayName.split(" ")[0]} 🟢)`;
-      });
-
-      socket.on('disconnect', () => {
-          headerText.innerText = "Casca (Offline 🔴)";
-      });
+      socket.on('connect', () => { headerText.innerText = `Casca (${currentUser.displayName.split(" ")[0]} 🟢)`; });
+      socket.on('disconnect', () => { headerText.innerText = "Casca (Offline 🔴)"; });
 
       sendBtn.addEventListener('click', () => {
           const msgText = msgInput.value.trim();

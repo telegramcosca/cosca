@@ -103,14 +103,17 @@
   
   /* ---> FINAL CENTERING FIX <--- */
   #login-view .login-content { 
-  position: relative; 
-  z-index: 1; 
-  min-height: 100dvh; 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  padding: calc(250 * var(--u)) calc(75 * var(--u)) calc(300 * var(--u)); 
+  padding: 0 calc(75 * var(--u)); 
   text-align: center; 
+  z-index: 1;
   }
   
   #login-view .login-logo { width: calc(228 * var(--u)); height: calc(312 * var(--u)); display: block; transform: translateX(calc(14 * var(--u))); }

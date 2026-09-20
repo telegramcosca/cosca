@@ -6,6 +6,11 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
+// Yeh naya hissa hai jo aapki HTML file ko show karega
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
 const server = http.createServer(app);
 
 // Casca app ka live data (Socket.io) setup

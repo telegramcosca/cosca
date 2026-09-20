@@ -1,44 +1,105 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const cors = require('cors');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const app = express();
-app.use(cors());
+const server = http.createServer(app);
+const io = new Server(server);
 
-// Yeh naya hissa hai jo aapki HTML file ko show karega
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+// 1. MongoDB Database Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB Connected Successfully!'))
+  .catch(err => console.log('MongoDB Error:', err));
+
+// 2. User Schema (Database me user ka data kaise save hoga)
+const userSchema = new mongoose.Schema({
+  googleId: String,
+  displayName: String,
+  email: String,
+  photo: String
+});
+const User = mongoose.model('User', userSchema);
+
+// 3. Session Setup (User ka login yaad rakhne ke liye)
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
 });
 
-const server = http.createServer(app);
-
-// Casca app ka live data (Socket.io) setup
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
+// 4. Google Login Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      // Check karo agar user pehle se hai
+      let user = await User.findOne({ googleId: profile.id });
+      if (!user) {
+        // Agar naya user hai toh database me save karo
+        user = await User.create({
+          googleId: profile.id,
+          displayName: profile.displayName,
+          email: profile.emails[0].value,
+          photo: profile.photos[0].value
+        });
+      }
+      return done(null, user);
+    } catch (err) {
+      return done(err, null);
     }
+  }
+));
+
+// 5. Authentication Routes (Login URLs)
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/'); // Login hone ke baad chat par wapas bhej do
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    res.redirect('/');
+  });
+});
+
+// API jo frontend ko batayegi ki kaun login hai
+app.get('/api/current_user', (req, res) => {
+  res.send(req.user); // Agar login nahi hai toh khali bhejega
+});
+
+// 6. Frontend Server aur Socket.io (Chat System)
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
-    console.log('Casca par naya user connect hua: ' + socket.id);
-
-    // Jab koi user message bhejega
-    socket.on('send_message', (data) => {
-        // Sabhi users ko live message forward karna
-        io.emit('receive_message', data);
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnect ho gaya');
-    });
+  socket.on('send_message', (msg) => {
+    io.emit('receive_message', msg);
+  });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
-    console.log(`Casca server port ${PORT} par chal raha hai`);
+  console.log(`Casca Server running on port ${PORT}`);
 });
-
-
-// update 2

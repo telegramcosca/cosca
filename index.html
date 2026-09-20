@@ -26,7 +26,10 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
         // Server se connection banayein
-        const socket = io('[https://cosca-production-ec29.up.railway.app](https://cosca-production-ec29.up.railway.app)');
+        const socket = io(window.location.origin, {
+    transports: ['websocket', 'polling']
+});
+        
 
         const header = document.getElementById('header');
         const sendBtn = document.getElementById('send-btn');

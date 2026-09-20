@@ -101,7 +101,15 @@
     display: grid; place-items: center; background: none; border: 0; border-radius: 50%; color: #ffffff; cursor: pointer;
   }
   #login-view .login-back svg { width: calc(48 * var(--u)); height: calc(48 * var(--u)); }
-  #login-view .login-content { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: calc(250 * var(--u)) calc(75 * var(--u)) calc(300 * var(--u)); text-align: center; }
+  
+  /* PERFECT CENTERING FIX APPLIED HERE */
+  #login-view .login-content { 
+    position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; /* Content vertically center mein aayega */
+    padding: 0 calc(75 * var(--u)) calc(120 * var(--u)); /* Padding fix kar di gayi hai */
+    text-align: center; 
+  }
+  
   #login-view .login-logo { width: calc(228 * var(--u)); height: calc(312 * var(--u)); display: block; transform: translateX(calc(14 * var(--u))); }
   #login-view .login-title { margin-top: calc(24 * var(--u)); font-size: calc(68 * var(--u)); line-height: 1.1; font-weight: 800; letter-spacing: -0.01em; color: #ffffff; }
   #login-view .login-subtitle { margin-top: calc(18 * var(--u)); max-width: calc(640 * var(--u)); font-size: calc(35 * var(--u)); line-height: 1.29; font-weight: 400; color: #a9b6ff; }
@@ -123,7 +131,7 @@
   #login-view .login-btn--github { color: #ffffff; background: rgba(24, 22, 128, 0.55); border: calc(2 * var(--u)) solid rgba(120, 130, 255, 0.45); box-shadow: inset 0 0 calc(30 * var(--u)) rgba(80, 90, 255, 0.12); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
   #login-view .login-btn--github .login-btn__arrow { color: #8d97ff; }
   
-  #login-view .login-footer { position: absolute; z-index: 1; left: 0; right: 0; bottom: calc(120 * var(--u)); padding: 0 calc(75 * var(--u)); text-align: center; font-size: calc(25 * var(--u)); line-height: 1.52; color: #97a3f2; }
+  #login-view .login-footer { position: absolute; z-index: 1; left: 0; right: 0; bottom: calc(60 * var(--u)); padding: 0 calc(75 * var(--u)); text-align: center; font-size: calc(25 * var(--u)); line-height: 1.52; color: #97a3f2; }
   #login-view .login-footer a { color: #14d8f2; font-weight: 700; text-decoration: none; }
   
   @media (min-width: 520px) {

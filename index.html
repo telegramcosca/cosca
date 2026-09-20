@@ -6,15 +6,36 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #e5ddd5; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Login Screen Styles */
-        #login-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; }
-        .google-btn { background: #4285F4; color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
-        .google-btn:active { transform: scale(0.95); }
+        /* 1. Welcome Screen Styles (New) */
+        #welcome-screen { 
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            background: linear-gradient(145deg, #1f3eb1, #7028e4); 
+            color: white; text-align: center; position: relative; overflow: hidden; 
+        }
+        .logo-svg { width: 120px; height: 120px; margin-bottom: 10px; }
+        .welcome-title { font-size: 48px; font-weight: bold; margin: 0; letter-spacing: 1px; }
+        .welcome-subtitle { font-size: 16px; margin: 15px 0 30px; color: #d4d0f0; line-height: 1.5; padding: 0 20px; }
+        
+        .dots { display: flex; gap: 8px; margin-bottom: 40px; }
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        .dot.active { background: #00e5ff; }
+        
+        #start-btn { 
+            background: linear-gradient(90deg, #00b4ff, #4364f7); 
+            color: white; border: none; padding: 16px 40px; border-radius: 30px; 
+            font-size: 18px; font-weight: bold; cursor: pointer; width: 85%; max-width: 320px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.2s;
+        }
+        #start-btn:active { transform: scale(0.96); }
 
-        /* Chat Screen Styles */
+        /* 2. Login Screen Styles */
+        #login-screen { display: none; flex: 1; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; }
+        .google-btn { background: #4285F4; color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
+        
+        /* 3. Chat Screen Styles */
         #chat-container { display: none; flex: 1; flex-direction: column; overflow: hidden; }
         #header { background: #128C7E; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: bold; }
-        #logout-btn { background: #d32f2f; color: white; text-decoration: none; padding: 5px 12px; border-radius: 15px; font-size: 14px; font-weight: normal; }
+        #logout-btn { background: #d32f2f; color: white; text-decoration: none; padding: 5px 12px; border-radius: 15px; font-size: 14px; }
         
         #chat-box { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
         .message { background: white; padding: 8px 12px; border-radius: 10px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 15px; position: relative; }
@@ -28,14 +49,40 @@
 </head>
 <body>
 
-    <!-- 1. LOGIN SCREEN -->
+    <!-- 1. WELCOME SCREEN (Naya Page) -->
+    <div id="welcome-screen">
+        <!-- Kite SVG Logo -->
+        <svg class="logo-svg" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 L15 45 L50 55 Z" fill="#ffffff"/>
+            <path d="M50 5 L85 45 L50 55 Z" fill="#e2e8f0"/>
+            <path d="M15 45 L50 95 L50 55 Z" fill="#f1f5f9"/>
+            <path d="M85 45 L50 95 L50 55 Z" fill="#ffffff"/>
+            <path d="M50 95 Q 65 105, 75 100 Q 85 95, 80 115" stroke="#ffffff" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+        
+        <h1 class="welcome-title">Casca</h1>
+        <p class="welcome-subtitle">The world's fastest messaging app.<br>It is free and secure.</p>
+        
+        <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        
+        <button id="start-btn">Start Messaging</button>
+    </div>
+
+    <!-- 2. LOGIN SCREEN -->
     <div id="login-screen">
-        <h1 style="color: #128C7E; margin-bottom: 10px;">Casca Chat</h1>
-        <p style="color: #666; margin-bottom: 30px;">Please login to continue</p>
+        <h1 style="color: #128C7E; margin-bottom: 10px;">Login</h1>
+        <p style="color: #666; margin-bottom: 30px;">Choose a login method</p>
         <a href="/auth/google" class="google-btn">G Continue with Google</a>
     </div>
 
-    <!-- 2. CHAT SCREEN (Pehle chhipa rahega) -->
+    <!-- 3. CHAT SCREEN -->
     <div id="chat-container">
         <div id="header">
             <span id="status-text">Casca</span>
@@ -52,14 +99,21 @@
     <script>
         let currentUser = null;
 
-        // Jaise hi app khulega, check karega ki koi login hai ya nahi
+        // Button dabane par Welcome screen chupao aur Login dikhao
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+        });
+
+        // App khulte hi check karo user logged in hai ya nahi
         fetch('/api/current_user')
             .then(res => res.text())
             .then(text => {
                 if (text) {
                     try {
                         currentUser = JSON.parse(text);
-                        // Agar user mil gaya, toh login screen chupao aur chat dikhao
+                        // Logged in hai toh dono purani screens chupa kar seedha chat kholo
+                        document.getElementById('welcome-screen').style.display = 'none';
                         document.getElementById('login-screen').style.display = 'none';
                         document.getElementById('chat-container').style.display = 'flex';
                         startChatSystem();
@@ -82,42 +136,30 @@
                 headerText.innerText = "Casca (Offline 🔴)";
             });
 
-            // Message bhejte waqt ab sirf text nahi, naam bhi bhejenge
             sendBtn.addEventListener('click', () => {
                 const msgText = msgInput.value.trim();
                 if(msgText !== "") {
-                    const msgData = {
-                        text: msgText,
-                        senderName: currentUser.displayName
-                    };
-                    socket.emit('send_message', msgData);
+                    socket.emit('send_message', { text: msgText, senderName: currentUser.displayName });
                     msgInput.value = '';
                 }
             });
 
-            // Message receive hone par usko screen par lagana
             socket.on('receive_message', (data) => {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = 'message';
+                if (data.senderName === currentUser.displayName) msgDiv.classList.add('my-message');
                 
-                // Agar message khud ne bheja hai, toh green color do (WhatsApp style)
-                if (data.senderName === currentUser.displayName) {
-                    msgDiv.classList.add('my-message');
-                }
-                
-                // Jisne bheja hai uska naam print karo
                 const nameSpan = document.createElement('div');
                 nameSpan.className = 'sender-name';
                 nameSpan.innerText = data.senderName;
                 
-                // Asli text print karo
                 const textSpan = document.createElement('div');
                 textSpan.innerText = data.text;
 
                 msgDiv.appendChild(nameSpan);
                 msgDiv.appendChild(textSpan);
                 chatBox.appendChild(msgDiv);
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll
+                chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
     </script>

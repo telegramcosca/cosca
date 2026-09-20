@@ -7,57 +7,55 @@
     <style>
         body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: #e5ddd5; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Deep vibrant gradient exactly like original */
+        /* Exact Original Deep Blue/Purple Gradient */
         #welcome-screen { 
             flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            background: linear-gradient(150deg, #0f249c 0%, #3a1c9e 40%, #5a19c7 100%); 
+            background: linear-gradient(150deg, #1732a4 0%, #3a22af 45%, #622ad3 100%); 
             color: white; text-align: center; position: relative; overflow: hidden; 
         }
 
-        /* Top-Left Wave */
+        /* Top-Left Bright Blue Wave */
         #welcome-screen::before {
-            content: ''; position: absolute; top: -10%; left: -20%; width: 80%; height: 50%;
-            background: radial-gradient(ellipse at top left, rgba(0, 162, 255, 0.4) 0%, transparent 65%); 
+            content: ''; position: absolute; top: -20%; left: -20%; width: 90%; height: 60%;
+            background: radial-gradient(circle, rgba(0, 162, 255, 0.45) 0%, transparent 65%); 
             border-radius: 50%; z-index: 1;
         }
-        /* Bottom-Right Wave */
+        
+        /* Bottom-Right Purple Wave */
         #welcome-screen::after {
-            content: ''; position: absolute; bottom: -15%; right: -25%; width: 100%; height: 60%;
-            background: radial-gradient(ellipse at bottom right, rgba(144, 46, 242, 0.4) 0%, transparent 65%); 
+            content: ''; position: absolute; bottom: -20%; right: -30%; width: 100%; height: 70%;
+            background: radial-gradient(circle, rgba(144, 46, 242, 0.4) 0%, transparent 65%); 
             border-radius: 50%; z-index: 1;
         }
 
-        /* Sparkles */
-        .sparkles { position: absolute; top: 8%; right: 10%; width: 45px; opacity: 0.9; z-index: 2; }
+        /* Sparkles Top Right */
+        .sparkles { position: absolute; top: 7%; right: 10%; width: 40px; opacity: 0.9; z-index: 3; }
         
-        /* Logo styling with blend-mode to remove JPG box */
+        /* Logo Container */
         .logo-container { 
-            z-index: 3; margin-bottom: 5px; width: 140px; height: 140px; 
+            z-index: 3; margin-bottom: 5px; width: 130px; height: 130px; 
             display: flex; justify-content: center; align-items: center; 
         }
-        .logo-image {
-            width: 130px; height: auto; 
-            mix-blend-mode: screen; /* Yeh image ke square background ko gayab kar dega */
-            border-radius: 20px;
-        }
         
-        .welcome-title { font-size: 56px; font-weight: 700; margin: 0; z-index: 3; letter-spacing: 0px; }
-        .welcome-subtitle { font-size: 16px; margin: 8px 0 35px; color: #e2dff5; line-height: 1.4; font-weight: 400; z-index: 3; }
+        .welcome-title { font-size: 52px; font-weight: 700; margin: 0; z-index: 3; letter-spacing: 0.5px; }
+        .welcome-subtitle { font-size: 16px; margin: 10px 0 35px; color: #e4e2f5; line-height: 1.4; font-weight: 400; z-index: 3; }
         
+        /* Dots exactly like original */
         .dots { display: flex; gap: 8px; margin-bottom: 50px; z-index: 3; }
         .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.3); border-radius: 50%; }
         .dot.active { background: #00d2ff; }
         
+        /* Button gradient matching original exactly */
         #start-btn { 
-            background: linear-gradient(90deg, #00b4ff 0%, #2f5dff 100%); 
-            color: white; border: none; padding: 16px 40px; border-radius: 30px; 
+            background: linear-gradient(90deg, #00b4ff 0%, #683aff 100%); 
+            color: white; border: none; padding: 18px 40px; border-radius: 30px; 
             font-size: 18px; font-weight: 600; cursor: pointer; width: 85%; max-width: 320px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.2s; z-index: 3;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: 0.2s; z-index: 3;
             font-family: 'Poppins', sans-serif;
         }
         #start-btn:active { transform: scale(0.96); }
 
-        /* Login & Chat Screens */
+        /* Login & Chat Screens (Hidden initially) */
         #login-screen { display: none; flex: 1; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; }
         .google-btn { background: #4285F4; color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
         
@@ -78,13 +76,22 @@
 <body>
 
     <div id="welcome-screen">
+        <!-- Sparkles SVG -->
         <svg class="sparkles" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 0 L13 13 L26 16 L13 19 L10 32 L7 19 L-6 16 L7 13 Z" fill="#ffffff" opacity="0.8"/>
             <path d="M35 15 L37 23 L45 25 L37 27 L35 35 L33 27 L25 25 L33 23 Z" fill="#ffffff" opacity="0.9"/>
         </svg>
 
+        <!-- Pure Code Logo (No image link, 100% transparent background) -->
         <div class="logo-container">
-            <img src="https://i.postimg.cc/MK726vxY/IMG-20260920-190927.jpg" alt="Casca Logo" class="logo-image">
+            <svg viewBox="0 0 100 120" style="width: 100%; height: auto;" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 5 L15 45 L50 55 Z" fill="#ffffff"/>
+                <path d="M50 5 L85 45 L50 55 Z" fill="#e2e8f0"/>
+                <path d="M15 45 L50 95 L50 55 Z" fill="#f1f5f9"/>
+                <path d="M85 45 L50 95 L50 55 Z" fill="#ffffff"/>
+                <path d="M50 95 Q 65 105, 75 100 Q 85 95, 80 115" stroke="#ffffff" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <path d="M50 95 Q 40 105, 50 110" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
         </div>
         
         <h1 class="welcome-title">Casca</h1>

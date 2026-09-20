@@ -5,58 +5,121 @@
     <title>Casca</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #e5ddd5; display: flex; flex-direction: column; height: 100vh; }
-        #header { background: #2b2b2b; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; transition: 0.3s; }
+        
+        /* Login Screen Styles */
+        #login-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; }
+        .google-btn { background: #4285F4; color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
+        .google-btn:active { transform: scale(0.95); }
+
+        /* Chat Screen Styles */
+        #chat-container { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        #header { background: #128C7E; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: bold; }
+        #logout-btn { background: #d32f2f; color: white; text-decoration: none; padding: 5px 12px; border-radius: 15px; font-size: 14px; font-weight: normal; }
+        
         #chat-box { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
-        .message { background: white; padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 15px; }
+        .message { background: white; padding: 8px 12px; border-radius: 10px; margin-bottom: 10px; max-width: 75%; word-wrap: break-word; align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1); font-size: 15px; position: relative; }
+        .my-message { background: #dcf8c6; align-self: flex-end; }
+        .sender-name { font-size: 11px; font-weight: bold; color: #075E54; margin-bottom: 4px; }
+        
         #input-area { display: flex; padding: 10px; background: #f0f0f0; }
         #msg-input { flex: 1; padding: 12px; border: none; border-radius: 20px; outline: none; font-size: 16px; }
-        #send-btn { background: #2b2b2b; color: white; border: none; padding: 10px 20px; margin-left: 10px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        #send-btn { background: #128C7E; color: white; border: none; padding: 10px 20px; margin-left: 10px; border-radius: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="header">Casca (Connecting... ⏳)</div>
-    <div id="chat-box"></div>
-    <div id="input-area">
-        <input type="text" id="msg-input" placeholder="Message type karein...">
-        <button id="send-btn">Send</button>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen">
+        <h1 style="color: #128C7E; margin-bottom: 10px;">Casca Chat</h1>
+        <p style="color: #666; margin-bottom: 30px;">Please login to continue</p>
+        <a href="/auth/google" class="google-btn">G Continue with Google</a>
     </div>
 
-    <!-- YEH SABSE BADA CHANGE HAI: Direct apne hi server se Socket.io load karna -->
+    <!-- 2. CHAT SCREEN (Pehle chhipa rahega) -->
+    <div id="chat-container">
+        <div id="header">
+            <span id="status-text">Casca</span>
+            <a href="/logout" id="logout-btn">Logout</a>
+        </div>
+        <div id="chat-box"></div>
+        <div id="input-area">
+            <input type="text" id="msg-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Simple connection jo automatically perfectly connect hoga
-        const socket = io();
+        let currentUser = null;
 
-        const header = document.getElementById('header');
-        const sendBtn = document.getElementById('send-btn');
-        const msgInput = document.getElementById('msg-input');
-        const chatBox = document.getElementById('chat-box');
+        // Jaise hi app khulega, check karega ki koi login hai ya nahi
+        fetch('/api/current_user')
+            .then(res => res.text())
+            .then(text => {
+                if (text) {
+                    try {
+                        currentUser = JSON.parse(text);
+                        // Agar user mil gaya, toh login screen chupao aur chat dikhao
+                        document.getElementById('login-screen').style.display = 'none';
+                        document.getElementById('chat-container').style.display = 'flex';
+                        startChatSystem();
+                    } catch(e) {}
+                }
+            });
 
-        socket.on('connect', () => {
-            header.innerText = "Casca (Online 🟢)";
-            header.style.background = "#128C7E";
-        });
+        function startChatSystem() {
+            const socket = io();
+            const headerText = document.getElementById('status-text');
+            const sendBtn = document.getElementById('send-btn');
+            const msgInput = document.getElementById('msg-input');
+            const chatBox = document.getElementById('chat-box');
 
-        socket.on('disconnect', () => {
-            header.innerText = "Casca (Offline 🔴)";
-            header.style.background = "#D32F2F";
-        });
+            socket.on('connect', () => {
+                headerText.innerText = `Casca (${currentUser.displayName.split(" ")[0]} 🟢)`;
+            });
 
-        sendBtn.addEventListener('click', () => {
-            const msg = msgInput.value;
-            if(msg.trim() !== "") {
-                socket.emit('send_message', msg);
-                msgInput.value = '';
-            }
-        });
+            socket.on('disconnect', () => {
+                headerText.innerText = "Casca (Offline 🔴)";
+            });
 
-        socket.on('receive_message', (msg) => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'message';
-            msgDiv.innerText = msg;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
+            // Message bhejte waqt ab sirf text nahi, naam bhi bhejenge
+            sendBtn.addEventListener('click', () => {
+                const msgText = msgInput.value.trim();
+                if(msgText !== "") {
+                    const msgData = {
+                        text: msgText,
+                        senderName: currentUser.displayName
+                    };
+                    socket.emit('send_message', msgData);
+                    msgInput.value = '';
+                }
+            });
+
+            // Message receive hone par usko screen par lagana
+            socket.on('receive_message', (data) => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message';
+                
+                // Agar message khud ne bheja hai, toh green color do (WhatsApp style)
+                if (data.senderName === currentUser.displayName) {
+                    msgDiv.classList.add('my-message');
+                }
+                
+                // Jisne bheja hai uska naam print karo
+                const nameSpan = document.createElement('div');
+                nameSpan.className = 'sender-name';
+                nameSpan.innerText = data.senderName;
+                
+                // Asli text print karo
+                const textSpan = document.createElement('div');
+                textSpan.innerText = data.text;
+
+                msgDiv.appendChild(nameSpan);
+                msgDiv.appendChild(textSpan);
+                chatBox.appendChild(msgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll
+            });
+        }
     </script>
 </body>
 </html>

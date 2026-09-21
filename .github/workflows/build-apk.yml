@@ -14,14 +14,14 @@ jobs:
           node-version: 20
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Build Standalone APK
         run: |
-          # 1. Naya folder banayen taaki aapke code se conflict na ho
+          # 1. Naya folder banayen
           mkdir casca-mobile-app
           cd casca-mobile-app
           
@@ -30,7 +30,7 @@ jobs:
           npm install @capacitor/core @capacitor/android
           npm install @capacitor/cli --save-dev
           
-          # 3. App ki config file set karein (Direct Railway URL ke sath)
+          # 3. App ki config file set karein
           echo '{
             "appId": "com.casca.app",
             "appName": "Casca",

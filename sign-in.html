@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2030d9">
+<title>Sign In - Casca</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --font: "Poppins", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --white: #ffffff;
+    --label: #dbe2ff;
+    --muted: #8e9df6;
+    --placeholder: #7482ec;
+    --icon-soft: #9aa7f8;
+    --field-bg: rgba(18, 22, 150, 0.32);
+    --field-border: #4064f5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    background: #0c1052;
+    font-family: var(--font);
+    color: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    justify-content: center;
+  }
+
+  .app { container-type: inline-size; width: min(100vw, 480px); }
+
+  .screen {
+    --u: calc(100cqw / 1024);
+    position: relative;
+    width: 100%;
+    min-height: max(100dvh, calc(1536 * var(--u)));
+    overflow: hidden;
+    isolation: isolate;
+    padding-bottom: calc(300 * var(--u));
+    background:
+      radial-gradient(120% 60% at 0% 0%, rgba(20, 45, 220, 0.55) 0%, rgba(20, 45, 220, 0) 60%),
+      radial-gradient(90% 55% at 100% 100%, rgba(105, 40, 255, 0.75) 0%, rgba(105, 40, 255, 0) 70%),
+      linear-gradient(162deg, #1b2fd9 0%, #2530de 38%, #3428e8 66%, #4c26f2 86%, #5a28f8 100%);
+  }
+
+  .screen::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0.09;
+    mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .deco { position: absolute; pointer-events: none; z-index: -1; }
+  .deco svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .deco--arc-top   { left: 0;  top: 0;    width: calc(400 * var(--u)); height: calc(260 * var(--u)); }
+  .deco--arc-bottom{ right: 0; bottom: 0; width: calc(420 * var(--u)); height: calc(260 * var(--u)); }
+  .deco--spark-1 { left: calc(888 * var(--u)); top: calc(75 * var(--u));  width: calc(48 * var(--u)); height: calc(50 * var(--u)); }
+  .deco--spark-2 { left: calc(823 * var(--u)); top: calc(122 * var(--u)); width: calc(48 * var(--u)); height: calc(50 * var(--u)); }
+  .deco--spark-1 svg, .deco--spark-2 svg { filter: drop-shadow(0 0 calc(10 * var(--u)) rgba(150, 120, 255, 0.55)); }
+
+  .back {
+    position: absolute; left: calc(44 * var(--u)); top: calc(31 * var(--u));
+    width: calc(64 * var(--u)); height: calc(64 * var(--u)); display: grid; place-items: center;
+    background: none; border: 0; color: var(--white); cursor: pointer; border-radius: 50%;
+  }
+  .back svg { width: calc(48 * var(--u)); height: calc(44 * var(--u)); }
+
+  .title {
+    margin-top: calc(195 * var(--u)); text-align: center; font-weight: 600;
+    font-size: calc(54 * var(--u)); line-height: calc(70 * var(--u)); letter-spacing: -0.005em; color: var(--white);
+  }
+  .subtitle {
+    margin: calc(15 * var(--u)) auto 0; text-align: center; font-weight: 400;
+    font-size: calc(27.5 * var(--u)); line-height: calc(42 * var(--u)); color: var(--muted);
+  }
+
+  .label {
+    display: block; padding-left: calc(97 * var(--u)); font-weight: 500;
+    font-size: calc(26 * var(--u)); line-height: calc(40 * var(--u)); color: var(--label);
+  }
+
+  .field {
+    position: relative; background: var(--field-bg); transition: box-shadow .2s ease, background .2s ease;
+  }
+  .field::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: calc(2.8 * var(--u));
+    background: var(--border-fill, var(--field-border));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none; transition: filter .2s ease;
+  }
+  .field:focus-within {
+    background: rgba(18, 22, 150, 0.45); box-shadow: 0 0 calc(26 * var(--u)) rgba(70, 120, 255, 0.35);
+  }
+  .field:focus-within::before { filter: brightness(1.35); }
+
+  .field input {
+    width: 100%; height: 100%; background: transparent; border: 0; outline: 0;
+    color: var(--white); font-family: var(--font); font-weight: 400; font-size: calc(27 * var(--u)); caret-color: #fff;
+  }
+  .field input::placeholder { color: var(--placeholder); opacity: 1; }
+  .field input:-webkit-autofill { -webkit-text-fill-color: #fff; transition: background-color 9999s ease-in-out 0s; }
+
+  .email-field {
+    margin: calc(6 * var(--u)) calc(78 * var(--u)) 0; height: calc(103 * var(--u)); border-radius: calc(38 * var(--u));
+    --border-fill: linear-gradient(90deg, #3f62f4, #4b66f5);
+  }
+  .email-field .icon {
+    position: absolute; left: calc(43 * var(--u)); top: 50%; width: calc(42 * var(--u)); height: calc(34 * var(--u));
+    transform: translateY(-50%); color: #eef1ff;
+  }
+  .email-field input { padding-left: calc(119 * var(--u)); padding-right: calc(40 * var(--u)); }
+
+  .pw-label-1 { margin-top: calc(56 * var(--u)); }
+
+  .pw-field {
+    margin: calc(8 * var(--u)) calc(79 * var(--u)) 0 calc(83 * var(--u)); height: calc(91 * var(--u));
+    border-radius: calc(45.5 * var(--u)); --border-fill: linear-gradient(90deg, #3f63f4, #4c64f5);
+  }
+  .pw-field .icon {
+    position: absolute; left: calc(47 * var(--u)); top: 50%; width: calc(34 * var(--u)); height: calc(42 * var(--u));
+    transform: translateY(-50%); color: #eef1ff;
+  }
+  .pw-field input { padding-left: calc(126 * var(--u)); padding-right: calc(110 * var(--u)); }
+
+  .eye {
+    position: absolute; right: calc(28 * var(--u)); top: 50%; width: calc(76 * var(--u)); height: calc(76 * var(--u));
+    transform: translateY(-50%); display: grid; place-items: center; background: none; border: 0; border-radius: 50%;
+    color: var(--icon-soft); cursor: pointer;
+  }
+  .eye svg { width: calc(44 * var(--u)); height: calc(30 * var(--u)); overflow: visible; }
+  .eye .slash { display: none; }
+  .eye.is-visible .slash { display: block; }
+
+  .next {
+    position: absolute; right: calc(74 * var(--u)); bottom: calc(94 * var(--u));
+    width: calc(134 * var(--u)); height: calc(134 * var(--u)); display: grid; place-items: center;
+    border: calc(1.5 * var(--u)) solid rgba(255, 255, 255, 0.22); border-radius: 50%;
+    background: linear-gradient(100deg, #2a8ff8 0%, #4b7df7 45%, #6d68f5 100%); color: var(--white); cursor: pointer;
+    box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgba(15, 20, 140, 0.45), inset 0 calc(2 * var(--u)) 0 rgba(255, 255, 255, 0.25);
+    transition: transform .12s ease, filter .2s ease;
+  }
+  .next:hover  { filter: brightness(1.06); }
+  .next:active { transform: scale(0.96); }
+  .next svg { width: calc(46 * var(--u)); height: calc(40 * var(--u)); }
+
+  .back:focus-visible, .next:focus-visible, .eye:focus-visible { outline: calc(3 * var(--u)) solid #fff; outline-offset: calc(3 * var(--u)); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+
+<body>
+<div class="app">
+  <main class="screen">
+    <!-- ===== Background decorations ===== -->
+    <div class="deco deco--arc-top" aria-hidden="true">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="arcTop" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1a5cff" stop-opacity="0.15"/>
+            <stop offset="0.5" stop-color="#1470ff" stop-opacity="0.7"/>
+            <stop offset="1" stop-color="#1e94ff" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M250 0 L340 0 C300 110 150 205 0 240 L0 178 C110 150 200 90 250 0 Z" fill="url(#arcTop)"/>
+        <path d="M340 0 C300 110 150 205 0 240" fill="none" stroke="#6cc4ff" stroke-opacity="0.45" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="deco deco--arc-bottom" aria-hidden="true">
+      <svg viewBox="0 0 420 260" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="arcBottom" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#6a30f7" stop-opacity="0.55"/>
+            <stop offset="0.5" stop-color="#8534f8" stop-opacity="0.95"/>
+            <stop offset="1" stop-color="#9a3cf9" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M420 14 C340 80 240 170 36 260 L420 260 Z" fill="url(#arcBottom)"/>
+        <path d="M420 14 C340 80 240 170 36 260" fill="none" stroke="#b58cff" stroke-opacity="0.4" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="deco deco--spark-1" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path fill="#8f72f4" d="M12 0C12.9 7.6 16.4 11.1 24 12 16.4 12.9 12.9 16.4 12 24 11.1 16.4 7.6 12.9 0 12 7.6 11.1 11.1 7.6 12 0Z"/></svg>
+    </div>
+    <div class="deco deco--spark-2" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path fill="#8f72f4" d="M12 0C12.9 7.6 16.4 11.1 24 12 16.4 12.9 12.9 16.4 12 24 11.1 16.4 7.6 12.9 0 12 7.6 11.1 11.1 7.6 12 0Z"/></svg>
+    </div>
+
+    <!-- ===== Back ===== -->
+    <button class="back" type="button" aria-label="Go back" onclick="history.back()">
+      <svg viewBox="0 0 48 44" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M46 22H4M22 3L3 22l19 19"/>
+      </svg>
+    </button>
+
+    <!-- ===== Content ===== -->
+    <form id="signInForm" novalidate>
+      <h1 class="title">Welcome Back</h1>
+      <p class="subtitle">Enter your email and password<br>to access your account.</p>
+
+      <!-- Email -->
+      <label class="label" for="email" style="padding-left: calc(100 * var(--u)); margin-top: calc(70 * var(--u));">Your email</label>
+      <div class="field email-field">
+        <svg class="icon" viewBox="0 0 42 34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="39" height="31" rx="5"/>
+          <path d="M4 6l17 13L38 6"/>
+        </svg>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="user@example.com" required>
+      </div>
+
+      <!-- Password -->
+      <label class="label pw-label-1" for="password">Password</label>
+      <div class="field pw-field">
+        <svg class="icon" viewBox="0 0 34 42" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8.5 18V12a8.5 8.5 0 0 1 17 0v6"/>
+          <rect x="2" y="17.5" width="30" height="22.5" rx="6"/>
+          <circle cx="17" cy="27.5" r="1.6" fill="currentColor"/>
+          <path d="M17 29.5v3"/>
+        </svg>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
+        <button class="eye" type="button" data-toggle="password" aria-label="Show password">
+          <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 15C8 6 14.5 2 22 2s14 4 20 13c-6 9-12.5 13-20 13S8 24 2 15Z"/>
+            <circle cx="22" cy="15" r="6.5"/>
+            <circle cx="22" cy="15" r="2" fill="currentColor" stroke="none"/>
+            <path class="slash" d="M6 27L38 3"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Sign In Button -->
+      <button class="next" type="submit" aria-label="Sign In">
+        <svg viewBox="0 0 46 40" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 20h40M26 3l17 17-17 17"/>
+        </svg>
+      </button>
+    </form>
+  </main>
+</div>
+
+<script>
+  (function () {
+    var form = document.getElementById('signInForm');
+    var email = document.getElementById('email');
+    var pw = document.getElementById('password');
+
+    // Show / hide password
+    document.querySelectorAll('.eye').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.dataset.toggle);
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.classList.toggle('is-visible', show);
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
+    });
+
+    // Handle Login Submit
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (!email.checkValidity()) { email.reportValidity(); return; }
+      if (!pw.checkValidity()) { pw.reportValidity(); return; }
+
+      // Backend ko login request bhejna
+      fetch('/api/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, password: pw.value })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          window.location.href = '/'; // Login successful, chat page par bhejo
+        } else {
+          alert(data.message); // Error message dikhao
+        }
+      })
+      .catch(err => alert("Error logging in. Please try again."));
+    });
+  })();
+</script>
+</body>
+</html>

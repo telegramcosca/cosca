@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 const http = require('http');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
@@ -9,6 +11,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 
 const app = express();
+app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server);
 
@@ -90,6 +93,97 @@ passport.use(new GitHubStrategy({
     }
   }
 ));
+// ==========================================
+// EMAIL & OTP ROUTES
+// ==========================================
+// Email bhejne ka setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+});
+
+// Route 1: OTP Send karna
+app.post('/api/send-otp', async (req, res) => {
+    const { email } = req.body;
+    // 6 digit ka random OTP banayein
+    const otp = Math.floor(100000 + Math.random() * 900000).toString(); 
+    const otpExpires = Date.now() + 5 * 60 * 1000; // 5 minute ke liye valid
+
+    try {
+        let user = await User.findOne({ email });
+        // Agar user nahi hai toh naya banayein, hai toh purana update karein
+        if (!user) {
+            user = await User.create({ email, otp, otpExpires });
+        } else {
+            user.otp = otp; 
+            user.otpExpires = otpExpires; 
+            await user.save();
+        }
+
+        // Email bhejein
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Casca - Verification Code',
+            text: `Your Casca OTP code is: ${otp}. It is valid for 5 minutes.`
+        });
+        res.json({ success: true, message: 'OTP sent!' });
+    } catch (err) {
+        console.log("Email Error:", err);
+        res.json({ success: false, message: 'Failed to send OTP' });
+    }
+});
+
+// Route 2: OTP Verify karke Password banana (Naye users ke liye)
+app.post('/api/verify-otp', async (req, res) => {
+    const { email, otp, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        // OTP galat hai ya expire ho gaya
+        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.json({ success: false, message: 'Invalid or Expired OTP' });
+        }
+
+        // Password ko encrypt (hash) karke save karein
+        user.password = await bcrypt.hash(password, 10);
+        user.otp = undefined; // OTP ka kaam khatam
+        user.otpExpires = undefined;
+        await user.save();
+
+        // Account banne ke baad direct login karwa dein
+        req.login(user, (err) => {
+            if(err) return res.json({ success: false });
+            res.json({ success: true, message: 'Account created!' });
+        });
+    } catch (err) {
+        res.json({ success: false, message: 'Error verifying OTP' });
+    }
+});
+
+// Route 3: Direct Email/Password se Login (Purane users ke liye)
+app.post('/api/sign-in', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user || !user.password) {
+            return res.json({ success: false, message: 'Account not found. Please sign up.' });
+        }
+        
+        // Password check karein
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.json({ success: false, message: 'Wrong password' });
+        }
+        
+        // Sahi hone par login
+        req.login(user, (err) => {
+            if(err) return res.json({ success: false });
+            res.json({ success: true, message: 'Logged in!' });
+        });
+    } catch (err) {
+        res.json({ success: false, message: 'Login Error' });
+    }
+});
 
 // ==========================================
 // AUTHENTICATION ROUTES

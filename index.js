@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 // 2. User Schema (Database me user ka data kaise save hoga)
 const userSchema = new mongoose.Schema({
   googleId: String,
+  githubId: String,
   displayName: String,
   email: String,
   photo: String

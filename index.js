@@ -68,6 +68,45 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+const GitHubStrategy = require('passport-github2').Strategy;
+
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "https://cosca-production-ec29.up.railway.app/auth/github/callback"
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+        // Find existing user or create a new one
+        let user = await User.findOne({ githubId: profile.id });
+        
+        if (!user) {
+            user = await User.create({
+                githubId: profile.id,
+                // GitHub kabhi-kabhi displayName nahi deta, toh username use karenge
+                displayName: profile.displayName || profile.username || "GitHub User",
+                // Agar aapke database mein email required hai, toh add karein:
+                // email: profile.emails ? profile.emails[0].value : ""
+            });
+        }
+        return done(null, user);
+    } catch (err) {
+        return done(err, null);
+    }
+  }
+));
+
+// GitHub Auth Routes (Inhe baki routes jahan app.get hain, wahan paste karein)
+app.get('/auth/github',
+  passport.authenticate('github', { scope: [ 'user:email' ] }));
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/' }),
+  (req, res) => {
+    // Login successful hone par home page par bhej dein
+    res.redirect('/');
+  });
+
 // 5. Authentication Routes (Login URLs)
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 

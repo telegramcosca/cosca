@@ -107,6 +107,33 @@ app.get('/auth/github/callback',
     // Login successful hone par home page par bhej dein
     res.redirect('/');
   });
+// ==========================================
+// GOOGLE AUTH ROUTES
+// ==========================================
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+// ==========================================
+// GITHUB AUTH ROUTES
+// ==========================================
+app.get('/auth/github',
+  passport.authenticate('github', { scope: [ 'user:email' ] })
+);
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
 // 5. Authentication Routes (Login URLs)
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

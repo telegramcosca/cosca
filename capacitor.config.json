@@ -1,0 +1,9 @@
+{
+  "appId": "com.casca.app",
+  "appName": "Casca",
+  "webDir": "www",
+  "server": {
+    "url": "https://cosca-production-ec29.up.railway.app/",
+    "cleartext": true
+  }
+}

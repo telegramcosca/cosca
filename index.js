@@ -12,6 +12,7 @@ const GitHubStrategy = require('passport-github2').Strategy;
 
 const app = express();
 app.use(express.json());
+app.use(express.static(__dirname));
 const server = http.createServer(app);
 const io = new Server(server);
 

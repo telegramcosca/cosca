@@ -17,20 +17,19 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          # Capacitor 5 ke liye Java 17 sabse best hai
+          java-version: '17'
 
       - name: Build Standalone APK
         run: |
-          # 1. Naya folder banayen
           mkdir casca-mobile-app
           cd casca-mobile-app
           
-          # 2. NPM aur Capacitor setup karein
           npm init -y
-          npm install @capacitor/core @capacitor/android
-          npm install @capacitor/cli --save-dev
+          # Naye unstable version (v6) ki jagah hum stable v5 install karenge
+          npm install @capacitor/core@5 @capacitor/android@5
+          npm install @capacitor/cli@5 --save-dev
           
-          # 3. App ki config file set karein
           echo '{
             "appId": "com.casca.app",
             "appName": "Casca",
@@ -41,11 +40,9 @@ jobs:
             }
           }' > capacitor.config.json
           
-          # 4. Dummy web folder banayen
           mkdir www
           echo "<html><body>Loading Casca...</body></html>" > www/index.html
           
-          # 5. Android project banayen aur APK build karein
           npx cap add android
           cd android
           chmod +x gradlew

@@ -5,414 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1f27b4">
 <title>Casca – Welcome</title>
-
-<!-- Fonts: Outfit (wordmark + tagline), Inter (button) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-  /* ==========================================================================
-     CASCA – Welcome / splash screen
-     --------------------------------------------------------------------------
-     The design was drawn on an artboard that is 887 px wide x 1774 px tall (1:2).
-     Every measurement below is written in ARTBOARD PIXELS through one helper:
-
-         calc(N * var(--u))      →  N px on the 887 px artboard, scaled to fit
-
-     So "font-size: calc(127 * var(--u))" means "127 px on the original design".
-     Change the number and the whole layout stays proportional on any phone.
-     ========================================================================== */
-
   :root {
-    /* --- colours sampled from the design --- */
-    --white:        #ffffff;
-    --bg-left:      #1129b1;   /* deep blue (left edge)              */
-    --bg-mid:       #2b25ab;   /* dark indigo (centre)               */
-    --bg-right:     #421fce;   /* violet (right edge)                */
-    --bg-glow:      #7a3cfd;   /* bright violet (top-right corner)   */
-    --cta-from:     #00a4ff;   /* button gradient – left  (cyan)     */
-    --cta-to:       #7f45fd;   /* button gradient – right (violet)   */
-    --dot-active:   #01a3fb;
-    --dot-idle:     rgba(200, 185, 255, .5);
-    --sparkle:      rgba(196, 181, 255, .64);
+    --white: #ffffff;
+    --bg-left: #1129b1;
+    --bg-mid: #2b25ab;
+    --bg-right: #421fce;
+    --bg-glow: #7a3cfd;
+    --cta-from: #00a4ff;
+    --cta-to: #7f45fd;
+    --dot-active: #01a3fb;
+    --dot-idle: rgba(200, 185, 255, .5);
+    --sparkle: rgba(196, 181, 255, .64);
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%;
-    background: #0a0c26;               /* only visible on wide desktop windows */
-    -webkit-text-size-adjust: 100%;
-  }
-
-  body {
-    display: flex;
-    justify-content: center;
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* --------------------------------------------------------------------------
-     The screen. On a phone it fills the viewport. On a desktop it becomes a
-     centred 1:2 phone-shaped canvas. --u = 1 artboard pixel.
-     -------------------------------------------------------------------------- */
+  html, body { height: 100%; background: #0a0c26; -webkit-text-size-adjust: 100%; }
+  body { display: flex; justify-content: center; font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   .screen {
     --u: calc(min(100vw, 50vh) / 887);
-    position: relative;
-    width: min(100vw, 50vh);
-    height: 100vh;
-    overflow: hidden;
-    isolation: isolate;
-    color: var(--white);
+    position: relative; width: min(100vw, 50vh); height: 100vh; overflow: hidden; isolation: isolate; color: var(--white);
   }
-  /* modern browsers: use dynamic viewport height (handles mobile browser toolbars) */
-  @supports (height: 100dvh) {
-    .screen {
-      --u: calc(min(100vw, 50dvh) / 887);
-      width: min(100vw, 50dvh);
-      height: 100dvh;
-    }
-  }
-
-  /* ==========================================================================
-     1. BACKGROUND
-     ========================================================================== */
+  @supports (height: 100dvh) { .screen { --u: calc(min(100vw, 50dvh) / 887); width: min(100vw, 50dvh); height: 100dvh; } }
   .bg {
-    position: absolute;
-    inset: 0;
-    z-index: -3;
-    background:
-      /* soft violet glow, top-right corner */
-      radial-gradient(circle at 100% 0,
-        var(--bg-glow) 0,
-        rgba(122, 60, 253, .45) calc(150 * var(--u)),
-        rgba(100, 45, 245, .18) calc(380 * var(--u)),
-        rgba(100, 45, 245, 0)   calc(600 * var(--u))),
-      /* bluer, more saturated upper half (stronger toward the right) */
-      radial-gradient(ellipse calc(640 * var(--u)) calc(760 * var(--u)) at 60% 0,
-        rgba(45, 45, 255, .38) 0,
-        rgba(45, 45, 255, .20) 50%,
-        rgba(45, 45, 255, 0)   100%),
-      /* extra violet along the upper right edge */
-      radial-gradient(ellipse calc(260 * var(--u)) calc(460 * var(--u)) at 100% 8%,
-        rgba(110, 50, 250, .22) 0,
-        rgba(110, 50, 250, 0)   100%),
-      /* faint lavender halo behind the pagination dots */
-      radial-gradient(ellipse calc(260 * var(--u)) calc(170 * var(--u)) at 50% 59%,
-        rgba(120, 105, 200, .16) 0,
-        rgba(120, 105, 200, 0) 100%),
-      /* extra saturated blue in the lower half */
-      linear-gradient(to bottom,
-        rgba(60, 25, 255, 0)   50%,
-        rgba(60, 25, 255, .18) 65%,
-        rgba(60, 25, 255, .30) 71%,
-        rgba(60, 25, 255, .30) 79%,
-        rgba(60, 25, 255, 0)   89%),
-      /* main left → right sweep: blue → indigo → violet */
-      linear-gradient(to right,
-        var(--bg-left) 0%,
-        #1c28ab 17%,
-        #2326a8 34%,
-        var(--bg-mid) 50%,
-        #3223b6 68%,
-        #3d20c6 85%,
-        var(--bg-right) 100%);
+    position: absolute; inset: 0; z-index: -3;
+    background: radial-gradient(circle at 100% 0, var(--bg-glow) 0, rgba(122,60,253,.45) calc(150*var(--u)), rgba(100,45,245,.18) calc(380*var(--u)), rgba(100,45,245,0) calc(600*var(--u))),
+                linear-gradient(to right, var(--bg-left) 0%, #1c28ab 17%, #2326a8 34%, var(--bg-mid) 50%, #3223b6 68%, #3d20c6 85%, var(--bg-right) 100%);
   }
-
-  /* Decorative SVG layers – anchored to the corners so they stay put on any height */
-  .deco {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-    overflow: visible;     /* lets soft glows extend past the SVG box */
-    z-index: -2;
-  }
-  .deco--top-left     { top: 0;    left: 0;  width: calc(400 * var(--u)); }
-  .deco--bottom       { bottom: 0; left: 0;  width: 100%; }
-  .deco--sparkles     { top: calc(80 * var(--u)); right: 0; width: calc(187 * var(--u)); z-index: -1; }
-
-  /* ==========================================================================
-     2. HERO  (kite · wordmark · tagline · dots)
-        Stacked in a column; all gaps are artboard pixels.
-        The stack starts at 17.76 % of the screen height (= y 315 / 1774).
-     ========================================================================== */
-  .hero {
-    position: absolute;
-    top: 17.76%;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  /* Kite logo – artboard box is 333 x 438 */
-  .logo {
-    display: block;
-    width: calc(333 * var(--u));
-    height: auto;
-  }
-
-  /* Wordmark "Casca" */
-  .brand {
-    margin-top: calc(5 * var(--u));
-    font-family: "Outfit", "Poppins", system-ui, sans-serif;
-    font-weight: 600;
-    font-size: calc(127 * var(--u));
-    line-height: 1;
-    letter-spacing: -0.005em;
-    color: var(--white);
-  }
-
-  /* Tagline – two lines */
-  .tagline {
-    margin-top: calc(33 * var(--u));
-    font-family: "Outfit", "Poppins", system-ui, sans-serif;
-    font-weight: 400;
-    font-size: calc(34 * var(--u));
-    line-height: calc(50 * var(--u));
-    color: rgba(255, 255, 255, .96);
-  }
-
-  /* Pagination dots – 6 dots, 17 px each, 16 px gap */
-  .dots {
-    margin-top: calc(61 * var(--u));
-    display: flex;
-    gap: calc(16 * var(--u));
-    list-style: none;
-  }
-  .dots li {
-    width:  calc(17 * var(--u));
-    height: calc(17 * var(--u));
-    border-radius: 50%;
-    background: var(--dot-idle);
-  }
-  .dots li[aria-current="true"] {
-    background: var(--dot-active);
-  }
-
-  /* ==========================================================================
-     3. CALL-TO-ACTION BUTTON
-        759 x 132 px pill, 64 px from each side, 173 px from the bottom.
-     ========================================================================== */
+  .deco { position: absolute; display: block; pointer-events: none; overflow: visible; z-index: -2; }
+  .deco--top-left { top: 0; left: 0; width: calc(400 * var(--u)); }
+  .deco--bottom { bottom: 0; left: 0; width: 100%; }
+  .deco--sparkles { top: calc(80 * var(--u)); right: 0; width: calc(187 * var(--u)); z-index: -1; }
+  .hero { position: absolute; top: 17.76%; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .logo { display: block; width: calc(333 * var(--u)); height: auto; }
+  .brand { margin-top: calc(5 * var(--u)); font-family: "Outfit", sans-serif; font-weight: 600; font-size: calc(127 * var(--u)); line-height: 1; color: var(--white); }
+  .tagline { margin-top: calc(33 * var(--u)); font-family: "Outfit", sans-serif; font-weight: 400; font-size: calc(34 * var(--u)); line-height: calc(50 * var(--u)); color: rgba(255,255,255,.96); }
+  .dots { margin-top: calc(61 * var(--u)); display: flex; gap: calc(16 * var(--u)); list-style: none; }
+  .dots li { width: calc(17 * var(--u)); height: calc(17 * var(--u)); border-radius: 50%; background: var(--dot-idle); }
+  .dots li[aria-current="true"] { background: var(--dot-active); }
   .cta {
-    position: absolute;
-    left: calc(64 * var(--u));
-    right: calc(64 * var(--u));
-    bottom: calc(173 * var(--u));
-    height: calc(132 * var(--u));
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 0;
-    border-radius: 999px;
+    position: absolute; left: calc(64 * var(--u)); right: calc(64 * var(--u)); bottom: calc(173 * var(--u)); height: calc(132 * var(--u));
+    display: flex; align-items: center; justify-content: center; border: 0; border-radius: 999px;
     background: linear-gradient(to right, var(--cta-from) 0%, #3a74fd 50%, var(--cta-to) 100%);
-    box-shadow: 0 calc(10 * var(--u)) calc(34 * var(--u)) rgba(30, 90, 255, .18);
-
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
-    font-size: calc(35 * var(--u));
-    letter-spacing: 0;
-    color: var(--white);
-    text-shadow: 0 0 calc(14 * var(--u)) rgba(255, 255, 255, .38);
-
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
-  }
-  .cta:hover        { filter: brightness(1.06); }
-  .cta:active       { transform: scale(.985); filter: brightness(.97); }
-  .cta:focus-visible{ outline: calc(4 * var(--u)) solid rgba(255, 255, 255, .85); outline-offset: calc(6 * var(--u)); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cta { transition: none; }
+    box-shadow: 0 calc(10 * var(--u)) calc(34 * var(--u)) rgba(30,90,255,.18);
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: calc(35 * var(--u)); color: var(--white); cursor: pointer;
   }
 </style>
 </head>
-
 <body>
 <main class="screen">
-
-  <!-- ===== 1. Background + decorative shapes ===== -->
   <div class="bg" aria-hidden="true"></div>
-
-  <!-- Top-left: two overlapping circles (back = violet, front = blue with glowing rim).
-       Coordinates are in artboard pixels, so the circle centres sit off-canvas on purpose. -->
-  <svg class="deco deco--top-left" viewBox="0 0 400 260" aria-hidden="true">
-    <defs>
-      <radialGradient id="gBack" gradientUnits="userSpaceOnUse" cx="-61.4" cy="-379.2" r="575">
-        <stop offset="0"    stop-color="#3a2fe0"/>
-        <stop offset="0.80" stop-color="#3a2ee2"/>
-        <stop offset="0.91" stop-color="#3c2be6"/>
-        <stop offset="0.96" stop-color="#4329e8"/>
-        <stop offset="0.985" stop-color="#4c2bec"/>
-        <stop offset="1"    stop-color="#5a30f2"/>
-      </radialGradient>
-      <radialGradient id="gFront" gradientUnits="userSpaceOnUse" cx="-398.9" cy="-436.4" r="787.2">
-        <stop offset="0"    stop-color="#2b2fd9"/>
-        <stop offset="0.76" stop-color="#2a31db"/>
-        <stop offset="0.87" stop-color="#2636e1"/>
-        <stop offset="0.91" stop-color="#2a3de6"/>
-        <stop offset="0.95" stop-color="#2c4ef4"/>
-        <stop offset="0.975" stop-color="#3565fb"/>
-        <stop offset="0.99" stop-color="#3f7cfe"/>
-        <stop offset="1"    stop-color="#4b8fff"/>
-      </radialGradient>
-    </defs>
-
-    <!-- back circle (violet) -->
-    <circle cx="-61.4" cy="-379.2" r="575" fill="url(#gBack)"/>
-    <circle cx="-61.4" cy="-379.2" r="574.2" fill="none" stroke="rgba(150,110,255,.35)" stroke-width="1.6"/>
-
-    <!-- front circle (blue) -->
-    <circle cx="-398.9" cy="-436.4" r="787.2" fill="url(#gFront)"/>
-    <circle cx="-398.9" cy="-436.4" r="786.4" fill="none" stroke="rgba(150,215,255,.38)" stroke-width="1.6"/>
-
-    <!-- the back circle's lower edge shows faintly through the front circle -->
-    <circle cx="-61.4" cy="-379.2" r="574.2" fill="none" stroke="rgba(140,175,255,.22)" stroke-width="1.6"/>
-  </svg>
-
-  <!-- Top-right: two four-point sparkles -->
-  <svg class="deco deco--sparkles" viewBox="700 80 187 140" aria-hidden="true">
-    <!-- big sparkle, centre (794,125) radius 21 -->
-    <path fill="var(--sparkle)"
-          d="M794 104 Q798.2 120.8 815 125 Q798.2 129.2 794 146 Q789.8 129.2 773 125 Q789.8 120.8 794 104 Z"/>
-    <!-- small sparkle, centre (750.5,178.5) radius 14.5 -->
-    <path fill="var(--sparkle)"
-          d="M750.5 164 Q753.4 175.6 765 178.5 Q753.4 181.4 750.5 193 Q747.6 181.4 736 178.5 Q747.6 175.6 750.5 164 Z"/>
-  </svg>
-
-  <!-- Bottom: purple circle (back) + blue swoosh (front).
-       viewBox starts at y = 1150 of the artboard so numbers match the original design. -->
-  <svg class="deco deco--bottom" viewBox="0 1150 887 624" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <defs>
-      <!-- purple circle: brighter, glowing rim toward its edge -->
-      <radialGradient id="gPurple" gradientUnits="userSpaceOnUse" cx="1435.8" cy="1928.3" r="932.8">
-        <stop offset="0"    stop-color="#431dd0"/>
-        <stop offset="0.70" stop-color="#3e1ccd"/>
-        <stop offset="0.77" stop-color="#411ed1"/>
-        <stop offset="0.80" stop-color="#4420d6"/>
-        <stop offset="0.837" stop-color="#4d2ae8"/>
-        <stop offset="0.88" stop-color="#5a28ea"/>
-        <stop offset="0.917" stop-color="#5f2ced"/>
-        <stop offset="0.954" stop-color="#6a30f5"/>
-        <stop offset="0.99" stop-color="#7b38fd"/>
-        <stop offset="1"    stop-color="#8442ff"/>
-      </radialGradient>
-
-      <!-- blue swoosh: tint that fills the shape -->
-      <linearGradient id="gSwooshFill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="887" y2="0">
-        <stop offset="0"    stop-color="#2a3cff" stop-opacity="0"/>
-        <stop offset="0.17" stop-color="#2a3cff" stop-opacity=".14"/>
-        <stop offset="0.34" stop-color="#2c34ff" stop-opacity=".30"/>
-        <stop offset="0.56" stop-color="#3430ff" stop-opacity=".30"/>
-        <stop offset="0.80" stop-color="#4438ff" stop-opacity=".18"/>
-        <stop offset="1"    stop-color="#5040ff" stop-opacity=".10"/>
-      </linearGradient>
-
-      <!-- blue swoosh: glowing rim colour (deeper blue on the left → soft violet on the right) -->
-      <linearGradient id="gSwooshRim" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="887" y2="0">
-        <stop offset="0"   stop-color="#2440f0"/>
-        <stop offset="0.5" stop-color="#3a62fb"/>
-        <stop offset="1"   stop-color="#6c70ff"/>
-      </linearGradient>
-
-      <!-- fades the purple circle out toward the bottom-left, like the original -->
-      <linearGradient id="gPurpleFade" gradientUnits="userSpaceOnUse" x1="887" y1="1150" x2="520" y2="1700">
-        <stop offset="0"   stop-color="#fff"/>
-        <stop offset="0.2" stop-color="#fff" stop-opacity=".85"/>
-        <stop offset="0.4" stop-color="#fff" stop-opacity=".5"/>
-        <stop offset="0.6" stop-color="#fff" stop-opacity=".2"/>
-        <stop offset="0.8" stop-color="#fff" stop-opacity="0"/>
-      </linearGradient>
-      <mask id="mPurple" maskUnits="userSpaceOnUse" x="-100" y="950" width="1100" height="900">
-        <rect x="-100" y="950" width="1100" height="900" fill="url(#gPurpleFade)"/>
-      </mask>
-
-      <filter id="fGlow" x="-10%" y="-10%" width="120%" height="120%">
-        <feGaussianBlur stdDeviation="26"/>
-      </filter>
-
-      <filter id="fBlur" x="-10%" y="-30%" width="120%" height="160%">
-        <feGaussianBlur stdDeviation="13"/>
-      </filter>
-
-      <!-- everything the swoosh paints stays inside its own shape -->
-      <clipPath id="cSwoosh">
-        <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1 L-20 1800 L920 1800 Z"/>
-      </clipPath>
-    </defs>
-
-    <!-- purple circle (back) -->
-    <g mask="url(#mPurple)">
-      <circle cx="1435.8" cy="1928.3" r="932.8" fill="none" stroke="#7038fa" stroke-width="70" stroke-opacity=".6" filter="url(#fGlow)"/>
-      <circle cx="1435.8" cy="1928.3" r="932.8" fill="url(#gPurple)"/>
-      <circle cx="1435.8" cy="1928.3" r="932" fill="none" stroke="rgba(200,160,255,.28)" stroke-width="1.6"/>
-    </g>
-
-    <!-- blue swoosh (front) -->
-    <g clip-path="url(#cSwoosh)">
-      <rect x="-20" y="1290" width="940" height="510" fill="url(#gSwooshFill)"/>
-      <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1"
-            fill="none" stroke="url(#gSwooshRim)" stroke-width="46" stroke-opacity=".75"
-            filter="url(#fBlur)"/>
-      <path d="M920 1310 C606.7 1338.4 293.3 1713.3 -20 1795.1"
-            fill="none" stroke="rgba(170,190,255,.42)" stroke-width="2"/>
-    </g>
-  </svg>
-
-  <!-- ===== 2. Hero ===== -->
   <section class="hero">
-
-    <!-- Kite logo. Artboard coordinates (viewBox = x 277…610, y 315…753).
-         fill-rule="evenodd" cuts the three "sail" openings out of the white shape. -->
     <svg class="logo" viewBox="277 315 333 438" role="img" aria-label="Casca kite logo">
-      <path fill="#fff" fill-rule="evenodd" d="
-        M425,609 L427.6,603.9
-        C437.4,692.1 541.3,674.1 570.9,749.1
-        C571.3,740.8 570.5,731.9 567.6,723.9
-        C550.8,651.2 455.2,672.5 433.6,601.6
-        C434.4,598.1 437.9,594.3 440.1,591.6
-        C444.1,596.9 446.7,603.3 451.9,608.4
-        C490.1,656.2 556.8,618.5 593.6,671.4
-        L589.9,650.6 L604.4,643.6
-        C599.3,639.4 594.3,635 588.9,631.6
-        C545.2,597.3 480.6,639.3 443.1,587.1
-        L546,450 L425,318 L303,451 Z
-
-        M426,332 L497,416 L426,431 Z
-
-        M496,419 L497,421 L426,598 L425,443 L336,472 L309,452 L426,431 L426,441 Z
-      "/>
+      <path fill="#fff" fill-rule="evenodd" d="M425,609 L427.6,603.9 C437.4,692.1 541.3,674.1 570.9,749.1 C571.3,740.8 570.5,731.9 567.6,723.9 C550.8,651.2 455.2,672.5 433.6,601.6 C434.4,598.1 437.9,594.3 440.1,591.6 C444.1,596.9 446.7,603.3 451.9,608.4 C490.1,656.2 556.8,618.5 593.6,671.4 L589.9,650.6 L604.4,643.6 C599.3,639.4 594.3,635 588.9,631.6 C545.2,597.3 480.6,639.3 443.1,587.1 L546,450 L425,318 L303,451 Z M426,332 L497,416 L426,431 Z M496,419 L497,421 L426,598 L425,443 L336,472 L309,452 L426,431 L426,441 Z"/>
     </svg>
-
     <h1 class="brand">Casca</h1>
-
     <p class="tagline">The world’s fastest messaging app.<br>It is free and secure.</p>
-
-    <!-- Pagination: page 1 of 6 -->
-    <ol class="dots" aria-label="Onboarding progress, page 1 of 6">
-      <li aria-current="true"></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
+    <ol class="dots" aria-label="Onboarding progress">
+      <li aria-current="true"></li><li></li><li></li><li></li><li></li><li></li>
     </ol>
   </section>
-
-  <!-- ===== 3. Call to action ===== -->
   <button class="cta" type="button" id="startBtn">Start Messaging</button>
-
 </main>
-
 <script>
-  // Hook up your own navigation here.
   document.getElementById('startBtn').addEventListener('click', function () {
     window.location.href = 'login.html';
   });

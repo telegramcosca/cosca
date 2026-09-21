@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2030d9">
+<title>Verify your email</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --font: "Poppins", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --white: #ffffff;
+    --label: #dbe2ff;
+    --muted: #8e9df6;
+    --placeholder: #7482ec;
+    --icon-soft: #9aa7f8;
+    --cyan: #22d3f0;
+    --field-bg: rgba(18, 22, 150, 0.32);
+    --field-border: #4064f5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    background: #0c1052;
+    font-family: var(--font);
+    color: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    justify-content: center;
+  }
+
+  .app { container-type: inline-size; width: min(100vw, 480px); }
+
+  .screen {
+    --u: calc(100cqw / 1024);
+    position: relative;
+    width: 100%;
+    min-height: max(100dvh, calc(1536 * var(--u)));
+    overflow: hidden;
+    isolation: isolate;
+    padding-bottom: calc(300 * var(--u));
+    background:
+      radial-gradient(120% 60% at 0% 0%, rgba(20, 45, 220, 0.55) 0%, rgba(20, 45, 220, 0) 60%),
+      radial-gradient(90% 55% at 100% 100%, rgba(105, 40, 255, 0.75) 0%, rgba(105, 40, 255, 0) 70%),
+      linear-gradient(162deg, #1b2fd9 0%, #2530de 38%, #3428e8 66%, #4c26f2 86%, #5a28f8 100%);
+  }
+
+  .screen::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0.09;
+    mix-blend-mode: overlay; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .deco { position: absolute; pointer-events: none; z-index: -1; }
+  .deco svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .deco--arc-top   { left: 0;  top: 0;    width: calc(400 * var(--u)); height: calc(260 * var(--u)); }
+  .deco--arc-bottom{ right: 0; bottom: 0; width: calc(420 * var(--u)); height: calc(260 * var(--u)); }
+  .deco--spark-1 { left: calc(888 * var(--u)); top: calc(75 * var(--u));  width: calc(48 * var(--u)); height: calc(50 * var(--u)); }
+  .deco--spark-2 { left: calc(823 * var(--u)); top: calc(122 * var(--u)); width: calc(48 * var(--u)); height: calc(50 * var(--u)); }
+  .deco--spark-1 svg, .deco--spark-2 svg { filter: drop-shadow(0 0 calc(10 * var(--u)) rgba(150, 120, 255, 0.55)); }
+
+  .back {
+    position: absolute; left: calc(44 * var(--u)); top: calc(31 * var(--u));
+    width: calc(64 * var(--u)); height: calc(64 * var(--u)); display: grid; place-items: center;
+    background: none; border: 0; color: var(--white); cursor: pointer; border-radius: 50%;
+  }
+  .back svg { width: calc(48 * var(--u)); height: calc(44 * var(--u)); }
+
+  .title {
+    margin-top: calc(195 * var(--u)); text-align: center; font-weight: 600;
+    font-size: calc(54 * var(--u)); line-height: calc(70 * var(--u)); letter-spacing: -0.005em; color: var(--white);
+  }
+  .subtitle {
+    margin: calc(15 * var(--u)) auto 0; text-align: center; font-weight: 400;
+    font-size: calc(27.5 * var(--u)); line-height: calc(42 * var(--u)); color: var(--muted);
+  }
+
+  .label {
+    display: block; padding-left: calc(97 * var(--u)); font-weight: 500;
+    font-size: calc(26 * var(--u)); line-height: calc(40 * var(--u)); color: var(--label);
+  }
+
+  .field {
+    position: relative; background: var(--field-bg); transition: box-shadow .2s ease, background .2s ease;
+  }
+  .field::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: calc(2.8 * var(--u));
+    background: var(--border-fill, var(--field-border));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none; transition: filter .2s ease;
+  }
+  .field:focus-within {
+    background: rgba(18, 22, 150, 0.45); box-shadow: 0 0 calc(26 * var(--u)) rgba(70, 120, 255, 0.35);
+  }
+  .field:focus-within::before { filter: brightness(1.35); }
+
+  .field input {
+    width: 100%; height: 100%; background: transparent; border: 0; outline: 0;
+    color: var(--white); font-family: var(--font); font-weight: 400; font-size: calc(27 * var(--u)); caret-color: #fff;
+  }
+  .field input::placeholder { color: var(--placeholder); opacity: 1; }
+  .field input:-webkit-autofill { -webkit-text-fill-color: #fff; transition: background-color 9999s ease-in-out 0s; }
+
+  .email-field {
+    margin: calc(6 * var(--u)) calc(78 * var(--u)) 0; height: calc(103 * var(--u)); border-radius: calc(38 * var(--u));
+    --border-fill: linear-gradient(90deg, #3f62f4, #4b66f5);
+  }
+  .email-field .icon {
+    position: absolute; left: calc(43 * var(--u)); top: 50%; width: calc(42 * var(--u)); height: calc(34 * var(--u));
+    transform: translateY(-50%); color: #eef1ff;
+  }
+  .email-field input { padding-left: calc(119 * var(--u)); padding-right: calc(250 * var(--u)); }
+
+  .send-btn {
+    position: absolute; right: 0; top: 0; bottom: 0; width: calc(224 * var(--u));
+    border: calc(2 * var(--u)) solid rgba(255, 255, 255, 0.28); border-radius: calc(38 * var(--u));
+    background: linear-gradient(90deg, #14b6ff 0%, #4a92fb 42%, #7b6cf6 100%); color: var(--white);
+    font-family: var(--font); font-weight: 500; font-size: calc(27.5 * var(--u)); cursor: pointer;
+    box-shadow: 0 calc(6 * var(--u)) calc(22 * var(--u)) rgba(20, 150, 255, 0.35), inset 0 calc(1 * var(--u)) 0 rgba(255, 255, 255, 0.35);
+    transition: transform .12s ease, filter .2s ease;
+  }
+  .send-btn:hover  { filter: brightness(1.06); }
+  .send-btn:active { transform: scale(0.98); }
+
+  .otp-label { margin-top: calc(55 * var(--u)); }
+  .otp-row {
+    margin: calc(10 * var(--u)) calc(87 * var(--u)) 0 calc(89 * var(--u));
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: calc(21 * var(--u));
+  }
+  .otp-cell { height: calc(115 * var(--u)); border-radius: calc(30 * var(--u)); --border-fill: #3d68f6; }
+  .otp-cell::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: calc(30 * var(--u)); height: calc(3.5 * var(--u));
+    border-radius: 99px; background: #6b7be6; transform: translate(-50%, -50%); pointer-events: none; transition: opacity .15s ease;
+  }
+  .otp-cell:has(input:not(:placeholder-shown))::after { opacity: 0; }
+  .otp-cell input { text-align: center; font-weight: 500; font-size: calc(48 * var(--u)); padding: 0; }
+
+  .otp-meta {
+    margin: calc(24 * var(--u)) calc(99 * var(--u)) 0 calc(94 * var(--u));
+    display: flex; justify-content: space-between; align-items: center; height: calc(36 * var(--u)); font-size: calc(25 * var(--u)); font-weight: 500;
+  }
+  .resend { background: none; border: 0; padding: 0; font-family: var(--font); font-weight: 500; font-size: inherit; color: var(--cyan); cursor: pointer; }
+  .resend:disabled { opacity: 0.5; cursor: default; }
+  .timer { color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+
+  .pw-label-1 { margin-top: calc(56 * var(--u)); }
+  .pw-label-2 { margin-top: calc(52 * var(--u)); }
+  .pw-field {
+    margin: calc(8 * var(--u)) calc(79 * var(--u)) 0 calc(83 * var(--u)); height: calc(91 * var(--u));
+    border-radius: calc(45.5 * var(--u)); --border-fill: linear-gradient(90deg, #3f63f4, #4c64f5);
+  }
+  .pw-field .icon {
+    position: absolute; left: calc(47 * var(--u)); top: 50%; width: calc(34 * var(--u)); height: calc(42 * var(--u));
+    transform: translateY(-50%); color: #eef1ff;
+  }
+  .pw-field input { padding-left: calc(126 * var(--u)); padding-right: calc(110 * var(--u)); }
+  .eye {
+    position: absolute; right: calc(28 * var(--u)); top: 50%; width: calc(76 * var(--u)); height: calc(76 * var(--u));
+    transform: translateY(-50%); display: grid; place-items: center; background: none; border: 0; border-radius: 50%; color: var(--icon-soft); cursor: pointer;
+  }
+  .eye svg { width: calc(44 * var(--u)); height: calc(30 * var(--u)); overflow: visible; }
+  .eye .slash { display: none; }
+  .eye.is-visible .slash { display: block; }
+
+  .next {
+    position: absolute; right: calc(74 * var(--u)); bottom: calc(94 * var(--u));
+    width: calc(134 * var(--u)); height: calc(134 * var(--u)); display: grid; place-items: center;
+    border: calc(1.5 * var(--u)) solid rgba(255, 255, 255, 0.22); border-radius: 50%;
+    background: linear-gradient(100deg, #2a8ff8 0%, #4b7df7 45%, #6d68f5 100%); color: var(--white); cursor: pointer;
+    box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgba(15, 20, 140, 0.45), inset 0 calc(2 * var(--u)) 0 rgba(255, 255, 255, 0.25);
+    transition: transform .12s ease, filter .2s ease;
+  }
+  .next:hover  { filter: brightness(1.06); }
+  .next:active { transform: scale(0.96); }
+  .next svg { width: calc(46 * var(--u)); height: calc(40 * var(--u)); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+
+<body>
+<div class="app">
+  <main class="screen">
+    <div class="deco deco--arc-top" aria-hidden="true">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="none">
+        <defs><linearGradient id="arcTop" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a5cff" stop-opacity="0.15"/><stop offset="0.5" stop-color="#1470ff" stop-opacity="0.7"/><stop offset="1" stop-color="#1e94ff" stop-opacity="1"/></linearGradient></defs>
+        <path d="M250 0 L340 0 C300 110 150 205 0 240 L0 178 C110 150 200 90 250 0 Z" fill="url(#arcTop)"/>
+        <path d="M340 0 C300 110 150 205 0 240" fill="none" stroke="#6cc4ff" stroke-opacity="0.45" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="deco deco--arc-bottom" aria-hidden="true">
+      <svg viewBox="0 0 420 260" preserveAspectRatio="none">
+        <defs><linearGradient id="arcBottom" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#6a30f7" stop-opacity="0.55"/><stop offset="0.5" stop-color="#8534f8" stop-opacity="0.95"/><stop offset="1" stop-color="#9a3cf9" stop-opacity="1"/></linearGradient></defs>
+        <path d="M420 14 C340 80 240 170 36 260 L420 260 Z" fill="url(#arcBottom)"/>
+        <path d="M420 14 C340 80 240 170 36 260" fill="none" stroke="#b58cff" stroke-opacity="0.4" stroke-width="3"/>
+      </svg>
+    </div>
+
+    <button class="back" type="button" aria-label="Go back" onclick="history.back()">
+      <svg viewBox="0 0 48 44" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M46 22H4M22 3L3 22l19 19"/>
+      </svg>
+    </button>
+
+    <form id="verifyForm" novalidate>
+      <h1 class="title">Verify your email</h1>
+      <p class="subtitle">We will send a verification code to the<br>email address you entered.</p>
+
+      <label class="label" for="email" style="padding-left: calc(100 * var(--u)); margin-top: calc(37 * var(--u));">Your email</label>
+      <div class="field email-field">
+        <svg class="icon" viewBox="0 0 42 34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="39" height="31" rx="5"/>
+          <path d="M4 6l17 13L38 6"/>
+        </svg>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="user@example.com" required>
+        <button class="send-btn" id="sendOtp" type="button">Send OTP</button>
+      </div>
+
+      <label class="label otp-label" for="otp1" id="otpLabel">Enter OTP</label>
+      <div class="otp-row" role="group" aria-labelledby="otpLabel">
+        <div class="field otp-cell"><input id="otp1" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder=" " aria-label="Digit 1"></div>
+        <div class="field otp-cell"><input type="text" inputmode="numeric" autocomplete="off" placeholder=" " aria-label="Digit 2"></div>
+        <div class="field otp-cell"><input type="text" inputmode="numeric" autocomplete="off" placeholder=" " aria-label="Digit 3"></div>
+        <div class="field otp-cell"><input type="text" inputmode="numeric" autocomplete="off" placeholder=" " aria-label="Digit 4"></div>
+        <div class="field otp-cell"><input type="text" inputmode="numeric" autocomplete="off" placeholder=" " aria-label="Digit 5"></div>
+        <div class="field otp-cell"><input type="text" inputmode="numeric" autocomplete="off" placeholder=" " aria-label="Digit 6"></div>
+      </div>
+
+      <div class="otp-meta">
+        <button class="resend" id="resendOtp" type="button">Resend OTP</button>
+        <span class="timer" id="timer" aria-live="off">00:45</span>
+      </div>
+
+      <label class="label pw-label-1" for="password">Create password</label>
+      <div class="field pw-field">
+        <svg class="icon" viewBox="0 0 34 42" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8.5 18V12a8.5 8.5 0 0 1 17 0v6"/>
+          <rect x="2" y="17.5" width="30" height="22.5" rx="6"/>
+          <circle cx="17" cy="27.5" r="1.6" fill="currentColor"/>
+          <path d="M17 29.5v3"/>
+        </svg>
+        <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create password" minlength="8" required>
+        <button class="eye" type="button" data-toggle="password" aria-label="Show password">
+          <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 15C8 6 14.5 2 22 2s14 4 20 13c-6 9-12.5 13-20 13S8 24 2 15Z"/>
+            <circle cx="22" cy="15" r="6.5"/>
+            <circle cx="22" cy="15" r="2" fill="currentColor" stroke="none"/>
+            <path class="slash" d="M6 27L38 3"/>
+          </svg>
+        </button>
+      </div>
+
+      <label class="label pw-label-2" for="password2">Re-enter password</label>
+      <div class="field pw-field">
+        <svg class="icon" viewBox="0 0 34 42" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8.5 18V12a8.5 8.5 0 0 1 17 0v6"/>
+          <rect x="2" y="17.5" width="30" height="22.5" rx="6"/>
+          <circle cx="17" cy="27.5" r="1.6" fill="currentColor"/>
+          <path d="M17 29.5v3"/>
+        </svg>
+        <input id="password2" name="password2" type="password" autocomplete="new-password" placeholder="Re-enter password" required>
+        <button class="eye" type="button" data-toggle="password2" aria-label="Show password">
+          <svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 15C8 6 14.5 2 22 2s14 4 20 13c-6 9-12.5 13-20 13S8 24 2 15Z"/>
+            <circle cx="22" cy="15" r="6.5"/>
+            <circle cx="22" cy="15" r="2" fill="currentColor" stroke="none"/>
+            <path class="slash" d="M6 27L38 3"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="next" type="submit" aria-label="Continue">
+        <svg viewBox="0 0 46 40" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 20h40M26 3l17 17-17 17"/>
+        </svg>
+      </button>
+    </form>
+  </main>
+</div>
+
+<script>
+  (function () {
+    var form      = document.getElementById('verifyForm');
+    var email     = document.getElementById('email');
+    var sendBtn   = document.getElementById('sendOtp');
+    var resendBtn = document.getElementById('resendOtp');
+    var timerEl   = document.getElementById('timer');
+    var pw1       = document.getElementById('password');
+    var pw2       = document.getElementById('password2');
+    var cells     = Array.prototype.slice.call(document.querySelectorAll('.otp-cell input'));
+
+    cells.forEach(function (cell, i) {
+      cell.addEventListener('focus', function () { cell.select(); });
+      cell.addEventListener('input', function () {
+        cell.value = cell.value.replace(/\D/g, '').slice(-1);
+        if (cell.value && cells[i + 1]) cells[i + 1].focus();
+      });
+      cell.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !cell.value && cells[i - 1]) {
+          cells[i - 1].value = '';
+          cells[i - 1].focus();
+        } else if (e.key === 'ArrowLeft' && cells[i - 1]) {
+          cells[i - 1].focus();
+        } else if (e.key === 'ArrowRight' && cells[i + 1]) {
+          cells[i + 1].focus();
+        }
+      });
+      cell.addEventListener('paste', function (e) {
+        e.preventDefault();
+        var digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, cells.length);
+        digits.split('').forEach(function (d, k) { cells[k].value = d; });
+        cells[Math.min(digits.length, cells.length - 1)].focus();
+      });
+    });
+
+    var TOTAL = 45, left = TOTAL, tick = null;
+    function fmt(s) {
+      var m = Math.floor(s / 60), r = s % 60;
+      return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+    }
+
+    function startCountdown() {
+      clearInterval(tick);
+      left = TOTAL;
+      timerEl.textContent = fmt(left);
+      resendBtn.disabled = true;
+      tick = setInterval(function () {
+        left -= 1;
+        timerEl.textContent = fmt(left);
+        if (left <= 0) {
+          clearInterval(tick);
+          resendBtn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    function requestOtp() {
+      if (!email.checkValidity()) { email.reportValidity(); return; }
+      startCountdown();
+      cells[0].focus();
+      
+      fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(!data.success) alert(data.message);
+      })
+      .catch(err => console.log("OTP Request Error", err));
+    }
+
+    sendBtn.addEventListener('click', requestOtp);
+    resendBtn.addEventListener('click', requestOtp);
+
+    document.querySelectorAll('.eye').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.dataset.toggle);
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.classList.toggle('is-visible', show);
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
+    });
+
+    pw2.addEventListener('input', function () { pw2.setCustomValidity(''); });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var code = cells.map(function (c) { return c.value; }).join('');
+      if (!email.checkValidity()) { email.reportValidity(); return; }
+      if (code.length < cells.length) { cells[code.length].focus(); return; }
+      if (!pw1.checkValidity()) { pw1.reportValidity(); return; }
+      if (pw1.value !== pw2.value) {
+        pw2.setCustomValidity('Passwords do not match');
+        pw2.reportValidity();
+        return;
+      }
+
+      fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, otp: code, password: pw1.value })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          window.location.href = '/';
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => alert("Error verifying OTP"));
+    });
+  })();
+</script>
+</body>
+</html>
